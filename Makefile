@@ -1,0 +1,42 @@
+#To run command gust use "make" and make function name
+#ex- <make run> use for run go run main.go
+#Go parameters
+
+execution: echo "** Executing Makefile**"
+GOCMD=go
+
+GOINSTALL=$(GOCMD) install
+GOBUILD=$(GOCMD) build
+GOCLEAN=$(GOCMD) clean
+GOTEST=$(GOCMD) test
+GOGET=$(GOCMD) get
+GORUN=$(GOCMD) run
+BINARY_NAME=main
+BINARY_UNIX=$(BINARY_NAME)_unix
+
+#make functions
+deps:
+	echo "Installing dependencies"
+	$(GOGET) github.com/joho/godotenv
+	$(GOGET) golang.org/x/oauth2
+	$(GOGET) golang.org/x/oauth2/google
+	$(GOGET) github.com/gorilla/mux
+	$(GOGET) github.com/jinzhu/gorm
+	$(GOGET) github.com/go-sql-driver/mysql
+
+# if we do "make run main", it will do "go run main.go"
+execute:
+	~/go/bin/goRubu
+
+setup:
+	export GOBIN=~/go/bin/
+	# my pwd is "/Users/home"
+	$(GOCMD) mod init goRubu
+
+install:
+	echo "Executing go install"
+	$(GOINSTALL)
+
+# make all -> will first run execution and then run
+all:
+	execution run
