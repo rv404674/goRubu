@@ -17,12 +17,7 @@ BINARY_UNIX=$(BINARY_NAME)_unix
 #make functions
 deps:
 	echo "Installing dependencies"
-	$(GOGET) github.com/joho/godotenv
-	$(GOGET) golang.org/x/oauth2
-	$(GOGET) golang.org/x/oauth2/google
 	$(GOGET) github.com/gorilla/mux
-	$(GOGET) github.com/jinzhu/gorm
-	$(GOGET) github.com/go-sql-driver/mysql
 
 # if we do "make run main", it will do "go run main.go"
 execute:
