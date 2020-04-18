@@ -20,7 +20,9 @@ deps:
 	# use for routing
 	$(GOGET) github.com/gorilla/mux
 	#use to load .env file
-	$(GOGET) github.com/joho/godotenv 
+	$(GOGET) github.com/joho/godotenv
+	$(GOGET) go.mongodb.org/mongo-driver
+
 
 # if we do "make run main", it will do "go run main.go"
 execute:
@@ -35,6 +37,6 @@ install:
 	echo "Executing go install"
 	$(GOINSTALL)
 
-# make all -> will first run execution and then run
+# make all -> will first install and then run execute
 all:
-	execution run
+	install execute
