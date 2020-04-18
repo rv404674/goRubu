@@ -17,7 +17,10 @@ BINARY_UNIX=$(BINARY_NAME)_unix
 #make functions
 deps:
 	echo "Installing dependencies"
+	# use for routing
 	$(GOGET) github.com/gorilla/mux
+	#use to load .env file
+	$(GOGET) github.com/joho/godotenv 
 
 # if we do "make run main", it will do "go run main.go"
 execute:
