@@ -21,7 +21,10 @@ deps:
 	$(GOGET) github.com/gorilla/mux
 	#use to load .env file
 	$(GOGET) github.com/joho/godotenv
+	# mongo driver
 	$(GOGET) go.mongodb.org/mongo-driver
+	# can write a cron in go program itself
+	$(GOGET) github.com/jasonlvhit/gocron
 
 
 # if we do "make run main", it will do "go run main.go"
