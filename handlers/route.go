@@ -12,8 +12,14 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type errorResponse struct {
-	Message string
+type Response struct {
+	Message      string
+	ShortenedUrl string
+}
+
+type RedirectionResp struct {
+	Message     string
+	OriginalUrl string
 }
 
 type inputUrl struct {
@@ -29,7 +35,7 @@ func Hellohandler(w http.ResponseWriter, r *http.Request) {
 func Basichandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Basic Handler")
 	//errorResponse is a struct defined above
-	json.NewEncoder(w).Encode(errorResponse{Message: "Used to test Basic Middleware"})
+	json.NewEncoder(w).Encode(Response{Message: "Used to test Basic Middleware", ShortenedUrl: ""})
 }
 
 //created new shortened Url
@@ -45,9 +51,32 @@ func CreateUrlHandler(w http.ResponseWriter, r *http.Request) {
 	// get go object from json
 	json.Unmarshal(reqBody, &input)
 	if input.Url == "" {
-		json.NewEncoder(w).Encode(errorResponse{Message: "Enter a url"})
+		fmt.Fprintf(w, "Enter a url to be shortened")
+		//json.NewEncoder(w).Encode(Response{Message: "Enter a url", ShortenedUrl: ""})
 	} else {
-		service.CreateShortenedUrl(input.Url)
+		shortenedUrl := service.CreateShortenedUrl(input.Url)
+		fmt.Fprintf(w, shortenedUrl)
+		//json.NewEncoder(w).Encode(Response{Message: "Success", ShortenedUrl: shortenedUrl})
+	}
+}
+
+func RedirectionHandler(w http.ResponseWriter, r *http.Request) {
+	var input inputUrl
+	reqBody, err := ioutil.ReadAll(r.Body)
+
+	if err != nil {
+		log.Println("Enter the redirection url")
+	}
+
+	json.Unmarshal(reqBody, &input)
+	if input.Url == "" {
+		fmt.Fprintf(w, "Enter some url")
+		//	json.NewEncoder(w).Encode(RedirectionResp{Message: "Enter a url", OriginalUrl: ""})
+	} else {
+		orgUrl := service.UrlRedirection(input.Url)
+		fmt.Fprintf(w, orgUrl)
+		// 	originalUrl := service.UrlRedirection(input.U
+		// 	json.NewEncoder(w).Encode(RedirectionResp{Message: "Success", OriginalUrl: originalUr
 	}
 
 }
@@ -57,6 +86,7 @@ func New() http.Handler {
 	route := mux.NewRouter()
 	route.HandleFunc("/check", Hellohandler)
 	route.HandleFunc("/shorten_url", CreateUrlHandler).Methods("POST")
+	route.HandleFunc("/redirect", RedirectionHandler).Methods("POST")
 
 	//special route to use middleware
 	// when we want to access endpoints having basicMiddleware (or can be a simple Auth),
