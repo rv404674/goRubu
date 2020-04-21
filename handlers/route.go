@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -27,9 +28,11 @@ type inputUrl struct {
 }
 
 //To test a basic handler
+//open this endpoint through browser simultaneously
 func Hellohandler(w http.ResponseWriter, r *http.Request) {
 	// see the imported package above
 	fmt.Fprintf(w, "Hello. Go is an Awesome Language")
+	time.Sleep(5 * time.Second)
 }
 
 func Basichandler(w http.ResponseWriter, r *http.Request) {
@@ -74,6 +77,9 @@ func RedirectionHandler(w http.ResponseWriter, r *http.Request) {
 		//	json.NewEncoder(w).Encode(RedirectionResp{Message: "Enter a url", OriginalUrl: ""})
 	} else {
 		orgUrl := service.UrlRedirection(input.Url)
+		if orgUrl == "" {
+			orgUrl = "This shortened Url doesn't exist in DB"
+		}
 		fmt.Fprintf(w, orgUrl)
 		// 	originalUrl := service.UrlRedirection(input.U
 		// 	json.NewEncoder(w).Encode(RedirectionResp{Message: "Success", OriginalUrl: originalUr
