@@ -12,6 +12,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/x/bsonx"
@@ -52,7 +53,7 @@ func init() {
 	indexName, err := collection1.Indexes().CreateOne(context.Background(), indexModel)
 
 	if err != nil {
-		log.Fatal("Error while creating index", err)
+		log.Fatal("Error while creating index ", err)
 	}
 
 	log.Println("IndexName", indexName)
@@ -79,7 +80,7 @@ func InsertInShortenedUrl(urlModel model.UrlModel) {
 func GetUrl(inputUniqueId int) models.UrlModel {
 	collection := client.Database(DB_NAME).Collection(COLLECTION1_NAME)
 
-	filter := bson.D{{"uniqueid", inputUniqueId}}
+	filter := bson.D{primitive.E{Key: "uniqueid", Value: inputUniqueId}}
 	var result models.UrlModel
 
 	err := collection.FindOne(context.TODO(), filter).Decode(&result)
@@ -93,7 +94,7 @@ func GetUrl(inputUniqueId int) models.UrlModel {
 // Clear the expired entries from the main "shortened_url" mongo collection
 func CleanDb(uid int) {
 	collection := client.Database(DB_NAME).Collection(COLLECTION1_NAME)
-	filter := bson.D{{"uniqueid", uid}}
+	filter := bson.D{primitive.E{Key: "uniqueid", Value: uid}}
 
 	deleteResult, err := collection.DeleteOne(context.TODO(), filter)
 	if err != nil {
@@ -109,9 +110,9 @@ func CleanDb(uid int) {
 func GetCounterValue() int {
 	// as there will be one row only
 	collection := client.Database(DB_NAME).Collection(COLLECTION2_NAME)
-	filter := bson.D{{"uniqueid", "counter"}}
-	var result models.IncrementerModel
+	filter := bson.D{primitive.E{Key: "uniqueid", Value: "counter"}}
 
+	var result models.IncrementerModel
 	err := collection.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
 		log.Fatal("**ERROR while fetching counter value", err)
@@ -122,7 +123,7 @@ func GetCounterValue() int {
 
 func UpdateCounter() {
 	collection := client.Database(DB_NAME).Collection(COLLECTION2_NAME)
-	filter := bson.D{{"uniqueid", "counter"}}
+	filter := bson.D{primitive.E{Key: "uniqueid", Value: "counter"}}
 
 	// $inc will increase value of counter by 1
 	update := bson.D{
