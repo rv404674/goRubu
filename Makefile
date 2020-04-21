@@ -25,6 +25,8 @@ deps:
 	$(GOGET) go.mongodb.org/mongo-driver
 	# can write a cron in go program itself
 	$(GOGET) github.com/jasonlvhit/gocron
+	# memcached client
+	$(GOGET) github.com/rainycape/memcache
 
 
 # if we do "make run main", it will do "go run main.go"
