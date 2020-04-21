@@ -78,15 +78,15 @@ func UrlRedirection(inputUrl string) string {
 	byteNumber, _ := base64.StdEncoding.DecodeString(encodedForm)
 	UniqueId, _ := strconv.Atoi(string(byteNumber))
 
-	//try hitting the cache first
+	// try hitting the cache first
 	// stored as "https://goRubu/MTW" -> "www.google.com"
-	// url, err := mc.Get(inputUrl)
-	// if err == nil {
-	// 	log.Println("Shortened url found in cache", string(url.Value))
-	// 	return string(url.Value)
-	// } else if err != memcache.ErrCacheMiss {
-	// 	log.Fatal("Memcached error ", err)
-	// }
+	url, err := mc.Get(inputUrl)
+	if err == nil {
+		log.Println("Shortened url found in cache", string(url.Value))
+		return string(url.Value)
+	} else if err != memcache.ErrCacheMiss {
+		log.Fatal("Memcached error ", err)
+	}
 
 	urlModel := dao.GetUrl(UniqueId)
 	return urlModel.Url
