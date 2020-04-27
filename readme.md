@@ -7,3 +7,9 @@ Swagger based documentation.
 
 1. Makefile - if someone wants to try out our project, can easy install all the packages.
 do "make deps" - to install the listed go packages.
+
+If mongo/memcached connection error
+brew services list
+
+brew services start mongodb
+mongo --port 27017
