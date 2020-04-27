@@ -62,14 +62,11 @@ func CreateShortenedUrl(inputUrl string) string {
 		log.Fatal("Error in setting memcached value ", err)
 	}
 	dao.InsertInShortenedUrl(inputModel)
-
 	dao.UpdateCounter()
-
 	return new_url
 }
 
 //Use caching here.
-// if
 func UrlRedirection(inputUrl string) string {
 	// https://goRubu/MTAwMDE=
 	i := strings.Index(inputUrl, "Rubu/")

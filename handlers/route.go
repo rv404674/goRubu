@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"goRubu/middlewares"
 	service "goRubu/services"
-	"io/ioutil"
-	"log"
 	"net/http"
 	"time"
 
@@ -43,53 +41,27 @@ func Basichandler(w http.ResponseWriter, r *http.Request) {
 
 //created new shortened Url
 func CreateUrlHandler(w http.ResponseWriter, r *http.Request) {
-	var input inputUrl
-	reqBody, err := ioutil.ReadAll(r.Body)
-
-	if err != nil {
-		// enter url:"" pair in body
-		log.Println("Enter the url you want to shorten")
-	}
-
-	// get go object from json
-	json.Unmarshal(reqBody, &input)
-	if input.Url == "" {
-		fmt.Fprintf(w, "Enter a url to be shortened")
-		//json.NewEncoder(w).Encode(Response{Message: "Enter a url", ShortenedUrl: ""})
-	} else {
-		shortenedUrl := service.CreateShortenedUrl(input.Url)
-		fmt.Fprintf(w, shortenedUrl)
-		//json.NewEncoder(w).Encode(Response{Message: "Success", ShortenedUrl: shortenedUrl})
-	}
+	temp_var := middlewares.GetUrlFromReq(w, r)
+	shortenedUrl := service.CreateShortenedUrl(temp_var.UrlValue)
+	fmt.Fprintf(w, shortenedUrl)
+	//json.NewEncoder(w).Encode(Response{Message: "Success", ShortenedUrl: shortenedUrl})
 }
 
 func RedirectionHandler(w http.ResponseWriter, r *http.Request) {
-	var input inputUrl
-	reqBody, err := ioutil.ReadAll(r.Body)
-
-	if err != nil {
-		log.Println("Enter the redirection url")
+	orgUrl := service.UrlRedirection(middlewares.GetUrlFromReq(w, r).UrlValue)
+	if orgUrl == "" {
+		orgUrl = "This shortened Url doesn't exist in DB"
 	}
-
-	json.Unmarshal(reqBody, &input)
-	if input.Url == "" {
-		fmt.Fprintf(w, "Enter some url")
-		//	json.NewEncoder(w).Encode(RedirectionResp{Message: "Enter a url", OriginalUrl: ""})
-	} else {
-		orgUrl := service.UrlRedirection(input.Url)
-		if orgUrl == "" {
-			orgUrl = "This shortened Url doesn't exist in DB"
-		}
-		fmt.Fprintf(w, orgUrl)
-		// 	originalUrl := service.UrlRedirection(input.U
-		// 	json.NewEncoder(w).Encode(RedirectionResp{Message: "Success", OriginalUrl: originalUr
-	}
-
+	fmt.Fprintf(w, orgUrl)
+	// 	json.NewEncoder(w).Encode(RedirectionResp{Message: "Success", OriginalUrl: originalUr
 }
 
 func New() http.Handler {
 	//gorilla mux, supports addition of a middleware to a route.
 	route := mux.NewRouter()
+	route.Use(middlewares.Logger)
+	route.Use(middlewares.CheckApiKey)
+
 	route.HandleFunc("/check", Hellohandler)
 	route.HandleFunc("/shorten_url", CreateUrlHandler).Methods("POST")
 	route.HandleFunc("/redirect", RedirectionHandler).Methods("POST")
