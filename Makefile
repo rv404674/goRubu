@@ -27,10 +27,15 @@ deps:
 	$(GOGET) github.com/jasonlvhit/gocron
 	# memcached client
 	$(GOGET) github.com/rainycape/memcache
+	# prometheus
+	$(GOGET) github.com/prometheus/client_golang/prometheus
+	$(GOGET) github.com/prometheus/client_golang/prometheus/promauto
+	$(GOGET) github.com/prometheus/client_golang/prometheus/promhttp
 
 
 # if we do "make run main", it will do "go run main.go"
 execute:
+	# will run the go executable, and hence the server.
 	~/go/bin/goRubu
 
 setup:
@@ -39,6 +44,7 @@ setup:
 	$(GOCMD) mod init goRubu
 
 install:
+	# will build the package into a single binary.
 	echo "Executing go install"
 	$(GOINSTALL)
 
