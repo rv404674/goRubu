@@ -12,6 +12,8 @@ This repo contains implementation of a Url Shortner written in [Golang](https://
 4. Contains Api Validation and Logging Middlewares, along with Swagger based documentation.
 
 Monitoring:
+
+
 <img style="float: right;" width="600" src="./assets/application_metrics.png"> 
  
 ##  Why goRubu? 🧐
