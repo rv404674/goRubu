@@ -1,6 +1,6 @@
 # goRubu
 
-<img style="float: right;" width="200" src="./assets/goRubu.png"> 
+<img style="float: right;" width="600" src="./assets/goRubu.png"> 
 
 This repo contains implementation of a Url Shortner written in [Golang](https://golang.org/).
 
