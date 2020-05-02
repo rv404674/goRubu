@@ -11,6 +11,8 @@ This repo contains implementation of a Url Shortner written in [Golang](https://
 3. Prometheus and Grafana based monitoring, to get an overall picture of the system and application metrics.
 4. Contains Api Validation and Logging Middlewares, along with Swagger based documentation.
 
+Monitoring - <img style="float: right;" width="400" src="./assets/application_metrics.png"> 
+ 
 ##  Why goRubu? 🧐
 
 Wanted to Learn go and system design by building a project. Hence goRubu.
@@ -92,7 +94,8 @@ The endpoint will return a shortened URL.
 ```
 
 5. Hit **http://localhost:9090/targets** (its where prometheus server will be running).
-If everything is working fine, The UI should look something like this [ui](assets/prometheus_targets.png).
+If everything is working fine, The UI should look something like this
+<img style="float: right;" width="400" src="./assets/prometheus_targets.png"> 
 
 # Contributing 🍻
 
