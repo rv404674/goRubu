@@ -88,6 +88,8 @@ func Logger(h http.Handler) http.Handler {
 			//defer log.Println(w.Header().Get("Body")) // this will run after service.UrlCreation is called
 			h.ServeHTTP(w, r)
 			t2 := time.Now()
-			log.Printf("Logger Middeware [%s] %q %v\n", r.Method, r.URL.String(), t2.Sub(t1))
+			log.Printf("Logging [%s] %q %v\n", r.Method, r.URL.String(), t2.Sub(t1))
+			//log.Println(r.Response.StatusCode) - THIS WONT WORK
+			// TODO find a way to get response status back
 		})
 }
