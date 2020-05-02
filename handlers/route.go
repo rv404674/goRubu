@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"goRubu/middlewares"
 	service "goRubu/services"
-	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -68,15 +67,10 @@ func (histProme *HistPrometheus) PrometheusMonitoring(h http.Handler) http.Handl
 			hist2 := histProme.histogram
 
 			recordMetrics()
-
 			t1 := time.Now()
-			log.Println(r.RequestURI)
-			//defer log.Println(w.Header().Get("Body")) // this will run after service.UrlCreation is called
 			h.ServeHTTP(w, r)
 			t2 := time.Now()
-			log.Printf("Logging [%s] %q %v\n", r.Method, r.URL.String(), t2.Sub(t1))
-			//log.Println(r.Response.StatusCode) - THIS WONT WORK
-			// TODO find a way to get response status back
+
 			hist2.WithLabelValues(
 				FloatToString(t2.Sub(t1).Seconds()), // code
 				r.URL.String(),                      // controller
@@ -115,10 +109,10 @@ func New() http.Handler {
 
 	hist := HistPrometheus{}
 	hist.Populate()
-	// prometheusMonitoring and CheckApiKey will be applied to all middlewares prefixed by
-	// /all
+	// prometheusMonitoring and CheckApiKey will be applied to all middlewares prefixed by all
 	main_route.Use(hist.PrometheusMonitoring)
 	main_route.Use(middlewares.CheckApiKey)
+	main_route.Use(middlewares.Logger)
 
 	// WILL expose default metrics for go application
 	// also as we won't be passing "url" in body, so to prevent missing key from
