@@ -1,0 +1,17 @@
+
+  +------------+     +--------+     +---------+
+HTTP request---->| web server |---->| router |---->| handler |
+                 +------------+     +--------+     +---------+
+
+IMP- 
+
+Gorilla is just a wrapper around net/http, and then 
+The http server implementation creates a new goroutine for each incoming request. 
+
+Now, requests are complex beasts and could be held active for a long time, which means
+it is trivial to OOM a Go http server that uses the std library naively by causing too
+many goroutines to be active at the same time.
+
+Probably will crash at 40k goroutineS
+
+Goril
