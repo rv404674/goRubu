@@ -70,7 +70,7 @@ func CheckApiKey(h http.Handler) http.Handler {
 			response := GetUrlFromReq(w, r)
 
 			if response.UrlValue == "" {
-				http.Error(w, "Missing Key", http.StatusUnauthorized)
+				http.Error(w, "Missing Key", http.StatusBadRequest)
 				log.Println("** Missing Key")
 				return
 			}
