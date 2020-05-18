@@ -13,3 +13,9 @@ func BasicMiddleware(next http.Handler) http.Handler {
 			next.ServeHTTP(w, r)
 		}) // if you place ) at next line, you will get an error.
 }
+
+// The above ) problem is a go Parser syntax limitation. You need to add , after }
+/*  	next.ServeHTTP(w, r)
+	},
+)
+*/

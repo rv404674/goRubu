@@ -6,6 +6,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -13,8 +14,23 @@ import (
 )
 
 func init() {
-	if err := godotenv.Load("variables.env"); err != nil {
-		log.Fatal("Error: No .env file found")
+	// normal "variables.env" was working for the application, but
+	// go test was unable to find it.
+
+	// when doing "go test ./tests -v", I am getting "pwd" as "/Users/home/goRubu/tests"
+	// when doing make execute or go run main.go, I am getting "pwd" as
+	// "Users/home/goRubu"
+
+	dir, _ := os.Getwd()
+	envFile := "variables.env"
+	if strings.Contains(dir, "test") {
+		envFile = "../variables.env"
+	}
+
+	log.Println("Working dir", dir)
+
+	if err := godotenv.Load(envFile); err != nil {
+		log.Fatal("Error: No .env file found, dbCon.go ", err)
 	}
 }
 

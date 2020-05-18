@@ -57,6 +57,8 @@ cd /usr/local/bin/grafana-6.7.3/bin
 ./grafana-server # this will run the grafana server
 ```
 
+**Note** - By default prometheus server runs on 9090, and grafana on 3000.
+
 Similarly download tar files for prometheus and node exporter and run there servers as well.
 
  ## Usage ⚙️

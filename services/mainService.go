@@ -2,6 +2,7 @@ package services
 
 //contains function to create a shortened url
 import (
+	"context"
 	"encoding/base64"
 	dao "goRubu/daos"
 	model "goRubu/models"
@@ -24,9 +25,18 @@ import (
 var mc *memcache.Client
 var CACHE_EXPIRATION int64
 var err error
+var EXPIRY_TIME int
 
 func init() {
-	if err = godotenv.Load("variables.env"); err != nil {
+	dir, _ := os.Getwd()
+	envFile := "variables.env"
+	if strings.Contains(dir, "test") {
+		envFile = "../variables.env"
+	}
+
+	log.Println("Working dir", dir)
+
+	if err := godotenv.Load(envFile); err != nil {
 		log.Fatal("Unable to load env file from urlCreationService Init", err)
 	}
 
@@ -38,6 +48,9 @@ func init() {
 	} else {
 		log.Println("Connection to Memcached Established")
 	}
+
+	// in min
+	EXPIRY_TIME, _ = strconv.Atoi(os.Getenv("EXPIRY_TIME"))
 }
 
 func CreateShortenedUrl(inputUrl string) string {
@@ -85,6 +98,42 @@ func UrlRedirection(inputUrl string) string {
 		log.Fatal("Memcached error ", err)
 	}
 
+	// if its a cache miss, fetch the value from db and update the cache.
 	urlModel := dao.GetUrl(UniqueId)
+
+	err2 := mc.Set(&memcache.Item{
+		Key:        inputUrl,
+		Value:      []byte(urlModel.Url),
+		Expiration: int32(CACHE_EXPIRATION),
+	})
+
+	if err2 != nil {
+		log.Fatal("Error in writing Memcached Value ", err2)
+	}
+
+	// urlMode.Url will be "", if the given shortened url does't exists in db.
 	return urlModel.Url
+}
+
+// removed db entries after 5 min
+func RemovedExpiredEntries() {
+
+	cur := dao.GetAll()
+
+	for cur.Next(context.TODO()) {
+		var input model.UrlModel
+		if err := cur.Decode(&input); err != nil {
+			log.Fatal("Error while decoding cursor value into model")
+		}
+
+		var start time.Time = input.Created_at
+		a := time.Now().Sub(start)
+
+		b := a.Minutes()
+
+		if b > float64(EXPIRY_TIME) {
+			dao.CleanDb(input.UniqueId)
+		}
+	}
+
 }
