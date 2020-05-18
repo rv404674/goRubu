@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	dbconnection "goRubu/database"
 	"goRubu/models"
@@ -25,8 +26,14 @@ var client *mongo.Client
 var db *mongo.Database
 
 func init() {
-	if err := godotenv.Load("variables.env"); err != nil {
-		log.Fatal("Error: No .env file found")
+	dir, _ := os.Getwd()
+	envFile := "variables.env"
+	if strings.Contains(dir, "test") {
+		envFile = "../variables.env"
+	}
+
+	if err := godotenv.Load(envFile); err != nil {
+		log.Fatal("Error: No .env file found, mainDao.go ", err)
 	}
 
 	DB_NAME = os.Getenv("DB_NAME")
@@ -85,7 +92,7 @@ func GetUrl(inputUniqueId int) models.UrlModel {
 
 	err := collection.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
-		log.Println("**ERROR while fetching using Id", err)
+		log.Printl(err)
 	}
 
 	return result
