@@ -1,0 +1,1 @@
+1. TO run tests - "go test ./tests -v"
