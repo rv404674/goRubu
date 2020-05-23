@@ -1,1 +1,7 @@
+NOTE - Normally these two commands work, but with "go 1.13" they are not working.
 1. TO run tests - "go test ./tests -v"
+2. to know about coverage "go test ./tests -v - cover"
+
+NOTE - Hence use these
+go test ./... -v -coverpkg=./... -coverprofile=cover.txt
+go tool cover -html=cover.txt -o cover.html

@@ -2,11 +2,11 @@
 
 <img style="float: right;" width="600" src="./assets/goRubu.png"> 
 
-This repo contains implementation of a Url Shortner written in [Golang](https://golang.org/).
+This repo contains implementation of a Url Shortner written in [Go](https://golang.org/).
 
 ## What is goRubu? 🚀
 
-1. A URL Shortner written in GoLang, with a Mongo based backend.
+1. A URL Shortner written in Go, with a Mongo based backend.
 2. Supports Caching for Hot URLs, with Memcached, using an LRU based eviction strategy, and write through a type of caching mechanism.
 3. Prometheus and Grafana based monitoring, to get an overall picture of the system and application metrics.
 4. Contains Api Validation and Logging Middlewares, along with Swagger based documentation.
@@ -18,7 +18,7 @@ Monitoring:
  
 ##  Why goRubu? 🧐
 
-Wanted to Learn go and system design by building a project. Hence goRubu.
+Wanted to Learn Go and system design by building a project. Hence goRubu.
 
 ## Prerequisites ✅
 
