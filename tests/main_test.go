@@ -16,14 +16,17 @@ func commonUtility(input string, wait string) string {
 	shortened_url := service.CreateShortenedUrl(input)
 
 	if wait == "yup" {
-		// approx 5 min, as any entry in the db will
-		time.Sleep(302 * time.Second)
+		// approx 3 min, as entries will be removed if
+		// there are in the db for more than 3 min
+		// will also be removed from after after 3 min
+		time.Sleep(182 * time.Second)
 		service.RemovedExpiredEntries()
 	}
 
 	orig_url := service.UrlRedirection(shortened_url)
 	return orig_url
 }
+
 func TestUrlcreation(t *testing.T) {
 
 	// 1. test for a empty string
@@ -48,7 +51,7 @@ func TestUrlcreation(t *testing.T) {
 }
 
 // check whether db cleaning service is working correctly or not.
-func TestDbpuring(t *testing.T) {
+func TestDbpurging(t *testing.T) {
 	test_url := "https://google.com"
 	output_url := commonUtility(test_url, "yup")
 
