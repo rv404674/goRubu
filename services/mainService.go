@@ -41,7 +41,11 @@ func init() {
 	}
 
 	// in seconds
-	CACHE_EXPIRATION, _ = strconv.ParseInt(os.Getenv("CACHE_EXPIRATION"), 0, 64)
+	// EXPIRY_TIME is cache expiry time and db expiry time as well
+
+	EXPIRY_TIME, _ = strconv.Atoi(os.Getenv("EXPIRATION_TIME"))
+	//CACHE_EXPIRATION, _ = strconv.ParseInt(os.Getenv("CACHE_EXPIRATION"), 0, 64)
+
 	mc, err = memcache.New(os.Getenv("MEMCACHED_DOMAIN"))
 	if err != nil {
 		log.Fatal("Unable to establish connection with the cache")
@@ -49,31 +53,26 @@ func init() {
 		log.Println("Connection to Memcached Established")
 	}
 
-	// in min
-	EXPIRY_TIME, _ = strconv.Atoi(os.Getenv("EXPIRY_TIME"))
 }
 
 func CreateShortenedUrl(inputUrl string) string {
 
-	// TODO handle concurrency
-
 	counterVal := dao.GetCounterValue()
-	byteNumber := []byte(strconv.Itoa(counterVal))
-	tempUrl := base64.StdEncoding.EncodeToString(byteNumber)
-
-	new_url := "https://goRubu/" + tempUrl
+	new_url := GenerateShortenedUrl(counterVal)
 	inputModel := model.UrlModel{UniqueId: counterVal, Url: inputUrl, Created_at: time.Now()}
 
 	//first update the cache with (key,val) => (new_url, inputUrl)
 	err = mc.Set(&memcache.Item{
 		Key:        new_url,
 		Value:      []byte(inputUrl),
-		Expiration: int32(CACHE_EXPIRATION),
+		Expiration: int32(EXPIRY_TIME),
 	})
 
 	if err != nil {
 		log.Fatal("Error in setting memcached value ", err)
 	}
+
+	// TODO handle Race Conditions
 	dao.InsertInShortenedUrl(inputModel)
 	dao.UpdateCounter()
 	return new_url
@@ -115,7 +114,8 @@ func UrlRedirection(inputUrl string) string {
 	return urlModel.Url
 }
 
-// removed db entries after 5 min
+// removed the db entries that are in the db for more than one min
+// this function is being run by a cron after every 5 min
 func RemovedExpiredEntries() {
 
 	cur := dao.GetAll()
@@ -126,14 +126,28 @@ func RemovedExpiredEntries() {
 			log.Fatal("Error while decoding cursor value into model")
 		}
 
-		var start time.Time = input.Created_at
-		a := time.Now().Sub(start)
+		// unique id is the counter val
+		// we need to delete url from cache as well
+		// but as our expiry time for db and cache is same. We dont need to delete it
+		// manually
+		// (key->val) = (https://fs.com -> www.google.com)
 
-		b := a.Minutes()
+		var start time.Time = input.Created_at
+		a := time.Since(start)
+		b := a.Seconds()
 
 		if b > float64(EXPIRY_TIME) {
 			dao.CleanDb(input.UniqueId)
 		}
 	}
 
+}
+
+// It will take a int, and encode it in base64
+func GenerateShortenedUrl(counterVal int) string {
+	byteNumber := []byte(strconv.Itoa(counterVal))
+	tempUrl := base64.StdEncoding.EncodeToString(byteNumber)
+
+	new_url := "https://goRubu/" + tempUrl
+	return new_url
 }
