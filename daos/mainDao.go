@@ -2,7 +2,6 @@ package daos
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -30,6 +29,7 @@ func init() {
 	envFile := "variables.env"
 	if strings.Contains(dir, "test") {
 		envFile = "../variables.env"
+		// TODO Remove .. , it is a security threat if done from root
 	}
 
 	if err := godotenv.Load(envFile); err != nil {
@@ -92,7 +92,7 @@ func GetUrl(inputUniqueId int) models.UrlModel {
 
 	err := collection.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
-		log.Printl(err)
+		log.Println(err)
 	}
 
 	return result
@@ -107,8 +107,7 @@ func CleanDb(uid int) {
 	if err != nil {
 		log.Fatal("Error while deleting a doc", err)
 	}
-
-	fmt.Printf("**Deleted %v documents", deleteResult.DeletedCount)
+	log.Println("**Deleted " + string(deleteResult.DeletedCount) + " documents ")
 }
 
 // update counter field in second collections - incrementer
