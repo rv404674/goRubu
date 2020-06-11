@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 
 	dbconnection "goRubu/database"
@@ -22,7 +23,6 @@ var DB_NAME string
 var COLLECTION1_NAME string
 var COLLECTION2_NAME string
 var client *mongo.Client
-var db *mongo.Database
 
 func init() {
 	dir, _ := os.Getwd()
@@ -107,7 +107,9 @@ func CleanDb(uid int) {
 	if err != nil {
 		log.Fatal("Error while deleting a doc", err)
 	}
-	log.Println("**Deleted " + string(deleteResult.DeletedCount) + " documents ")
+	// if you directly do string(deleteResult.DeletedCount) for deleteResult.DeletedCount = 67
+	// you will get C. Hence use strcov
+	log.Println("**Deleted " + strconv.FormatInt(deleteResult.DeletedCount, 10) + " documents ")
 }
 
 // update counter field in second collections - incrementer
