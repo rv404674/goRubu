@@ -19,8 +19,13 @@ import (
 	"go.mongodb.org/mongo-driver/x/bsonx"
 )
 
+//DB_NAME - the db name
 var DB_NAME string
+
+//COLLECTION1_NAME - first collection name
 var COLLECTION1_NAME string
+
+//COLLECTION2_NAME - second collection name
 var COLLECTION2_NAME string
 var client *mongo.Client
 
@@ -66,7 +71,7 @@ func init() {
 	log.Println("IndexName", indexName)
 }
 
-// this one inserts in "shortened_url" connections
+// InsertInShortenedUrl - this one inserts in "shortened_url" connections
 // this is using call by value i.e creating copy of urlModel everytime,
 // if json is large, try to prevent this
 func InsertInShortenedUrl(urlModel model.UrlModel) {
@@ -81,7 +86,7 @@ func InsertInShortenedUrl(urlModel model.UrlModel) {
 	log.Println("InsertedId", insertResult.InsertedID)
 }
 
-// has indexing on uniqueid field
+// GetUrl - has indexing on uniqueid field
 // perform find on 'shortened_url' collections
 func GetUrl(inputUniqueId int) models.UrlModel {
 	collection := client.Database(DB_NAME).Collection(COLLECTION1_NAME)
@@ -97,7 +102,7 @@ func GetUrl(inputUniqueId int) models.UrlModel {
 	return result
 }
 
-// Clear the expired entries from the main "shortened_url" mongo collection
+// CleanDb - Clear the expired entries from the main "shortened_url" mongo collection
 func CleanDb(uid int) {
 	collection := client.Database(DB_NAME).Collection(COLLECTION1_NAME)
 	filter := bson.D{primitive.E{Key: "uniqueid", Value: uid}}
@@ -111,7 +116,7 @@ func CleanDb(uid int) {
 	log.Println("**Deleted " + strconv.FormatInt(deleteResult.DeletedCount, 10) + " documents ")
 }
 
-// update counter field in second collections - incrementer
+// GetCounterValue - update counter field in second collections - incrementer
 // also there will be an already existing value in db (i.e counter will start from)- 10000
 // { "_id" : ObjectId("5e9b7c0e7b3a8740a2f828c4"), "uniqueid" : "counter", "value" : 10000 }
 func GetCounterValue() int {
@@ -130,6 +135,7 @@ func GetCounterValue() int {
 	return result.Value
 }
 
+// UpdateCounter - update the counter value by 1
 func UpdateCounter() {
 	collection := client.Database(DB_NAME).Collection(COLLECTION2_NAME)
 	filter := bson.D{primitive.E{Key: "uniqueid", Value: "counter"}}
@@ -150,7 +156,7 @@ func UpdateCounter() {
 
 }
 
-// will be used by CronService for db purging
+// GetAll - will be used by CronService for db purging
 func GetAll() *mongo.Cursor {
 	collection := client.Database(DB_NAME).Collection(COLLECTION1_NAME)
 
