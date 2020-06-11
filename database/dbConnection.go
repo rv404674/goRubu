@@ -32,7 +32,7 @@ func init() {
 	}
 }
 
-// create db connection
+// CreateCon - create db connection
 func CreateCon() *mongo.Client {
 	var dbDomain = os.Getenv("DB_DOMAIN")
 

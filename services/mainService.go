@@ -23,8 +23,11 @@ import (
 // is running in the CS at any point of time
 
 var mc *memcache.Client
+
 var CACHE_EXPIRATION int64
 var err error
+
+// EXPIRY_TIME - TTL for an item int cache
 var EXPIRY_TIME int
 
 func init() {
@@ -44,7 +47,6 @@ func init() {
 	// EXPIRY_TIME is cache expiry time and db expiry time as well
 
 	EXPIRY_TIME, _ = strconv.Atoi(os.Getenv("EXPIRATION_TIME"))
-	//CACHE_EXPIRATION, _ = strconv.ParseInt(os.Getenv("CACHE_EXPIRATION"), 0, 64)
 
 	mc, err = memcache.New(os.Getenv("MEMCACHED_DOMAIN"))
 	if err != nil {
@@ -55,6 +57,7 @@ func init() {
 
 }
 
+// CreateShortenedUrl - This service shortens a give url.
 func CreateShortenedUrl(inputUrl string) string {
 
 	counterVal := dao.GetCounterValue()
@@ -78,7 +81,7 @@ func CreateShortenedUrl(inputUrl string) string {
 	return new_url
 }
 
-//Use caching here.
+//UrlRedirection - will return back the original url from which the inputUrl was created
 func UrlRedirection(inputUrl string) string {
 	// https://goRubu/MTAwMDE=
 	i := strings.Index(inputUrl, "Rubu/")
@@ -103,7 +106,7 @@ func UrlRedirection(inputUrl string) string {
 	err2 := mc.Set(&memcache.Item{
 		Key:        inputUrl,
 		Value:      []byte(urlModel.Url),
-		Expiration: int32(CACHE_EXPIRATION),
+		Expiration: int32(EXPIRY_TIME),
 	})
 
 	if err2 != nil {
@@ -114,8 +117,7 @@ func UrlRedirection(inputUrl string) string {
 	return urlModel.Url
 }
 
-// removed the db entries that are in the db for more than one min
-// this function is being run by a cron after every 5 min
+// RemovedExpiredEntries -removed the db entries that are in the db for more than one min. this function is being run by a cron after every 5 min
 func RemovedExpiredEntries() {
 
 	cur := dao.GetAll()
@@ -143,11 +145,11 @@ func RemovedExpiredEntries() {
 
 }
 
-// It will take a int, and encode it in base64
+// GenerateShortenedUrl - It will take a int, and encode it in base64
 func GenerateShortenedUrl(counterVal int) string {
 	byteNumber := []byte(strconv.Itoa(counterVal))
 	tempUrl := base64.StdEncoding.EncodeToString(byteNumber)
 
-	new_url := "https://goRubu/" + tempUrl
-	return new_url
+	newUrl := "https://goRubu/" + tempUrl
+	return newUrl
 }

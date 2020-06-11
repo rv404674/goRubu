@@ -13,7 +13,7 @@ import (
 // should start with "Test" and latter name should start with capital letter
 
 func commonUtility(input string, wait string) string {
-	shortened_url := service.CreateShortenedUrl(input)
+	shortenedUrl := service.CreateShortenedUrl(input)
 
 	if wait == "yup" {
 		// approx 3 min, as entries will be removed if
@@ -23,41 +23,41 @@ func commonUtility(input string, wait string) string {
 		service.RemovedExpiredEntries()
 	}
 
-	orig_url := service.UrlRedirection(shortened_url)
-	return orig_url
+	origUrl := service.UrlRedirection(shortenedUrl)
+	return origUrl
 }
 
 func TestUrlcreation(t *testing.T) {
 
 	// 1. test for a empty string
-	test_url := ""
-	output_url := commonUtility(test_url, "")
+	testUrl := ""
+	outputUrl := commonUtility(testUrl, "")
 
-	if test_url != output_url {
-		t.Errorf("Test UrlCreation failed. Expected %s, got %s", test_url, output_url)
+	if testUrl != outputUrl {
+		t.Errorf("Test UrlCreation failed. Expected %s, got %s", testUrl, outputUrl)
 	} else {
-		t.Logf("Success, Expected %s, got %s", test_url, output_url)
+		t.Logf("Success, Expected %s, got %s", testUrl, outputUrl)
 	}
 
 	// 2. test for a real string
-	test_url = "https://rahulverma.me"
-	output_url = commonUtility(test_url, "")
-	if test_url != output_url {
-		t.Errorf("Test UrlCreation failed. Expected %s, got %s", test_url, output_url)
+	testUrl = "https://rahulverma.me"
+	outputUrl = commonUtility(testUrl, "")
+	if testUrl != outputUrl {
+		t.Errorf("Test UrlCreation failed. Expected %s, got %s", testUrl, outputUrl)
 	} else {
-		t.Logf("Success, Expected %s, got %s", test_url, output_url)
+		t.Logf("Success, Expected %s, got %s", testUrl, outputUrl)
 	}
 
 }
 
 // check whether db cleaning service is working correctly or not.
 func TestDbpurging(t *testing.T) {
-	test_url := "https://google.com"
-	output_url := commonUtility(test_url, "yup")
+	testUrl := "https://google.com"
+	outputUrl := commonUtility(testUrl, "yup")
 
-	if output_url != "" {
-		t.Errorf("Test DbPurging failed. Expected %s, got %s", "", output_url)
+	if outputUrl != "" {
+		t.Errorf("Test DbPurging failed. Expected %s, got %s", "", outputUrl)
 	} else {
-		t.Logf("Success, Expected %s, got %s", "", output_url)
+		t.Logf("Success, Expected %s, got %s", "", outputUrl)
 	}
 }
