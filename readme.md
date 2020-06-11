@@ -5,7 +5,6 @@
 This repo contains implementation of a Url Shortner written in [Go](https://golang.org/).
 
 [![Build Status](https://travis-ci.com/rv404674/goRubu.svg?branch=master)](https://travis-ci.org/rv404674/goRubu)
-
 [![Coverage Status](https://coveralls.io/repos/github/rv404674/goRubu/badge.svg?branch=master)](https://coveralls.io/github/rv404674/goRubu?branch=master)
 
 ## What is goRubu? 🚀
