@@ -121,7 +121,9 @@ func GetCounterValue() int {
 	var result models.IncrementerModel
 	err := collection.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
-		log.Fatal("**ERROR while fetching counter value", err)
+		log.Println("**ERROR while fetching counter value", err)
+		insertResult, _ := collection.InsertOne(context.Background(), models.IncrementerModel{UniqueId: "counter", Value: 10000})
+		log.Println("Initialized counter value InsertedId: ", insertResult.InsertedID)
 	}
 
 	return result.Value
