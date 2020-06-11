@@ -2,7 +2,9 @@
 
 <img style="float: right;" width="600" src="./assets/goRubu.png"> 
 
-This repo contains implementation of a Url Shortner written in [Go](https://golang.org/).
+> This repo contains implementation of a Url Shortner written in [Go](https://golang.org/).
+
+[![Coverage Status](https://coveralls.io/repos/github/rv404674/goRubu/badge.svg?branch=master)](https://coveralls.io/github/rv404674/goRubu?branch=master)
 
 ## What is goRubu? 🚀
 

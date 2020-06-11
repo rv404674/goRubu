@@ -11,4 +11,5 @@ require (
 	github.com/prometheus/client_golang v1.6.0
 	github.com/rainycape/memcache v0.0.0-20150622160815-1031fa0ce2f2
 	go.mongodb.org/mongo-driver v1.3.3
+	golang.org/x/tools v0.0.0-20200522201501-cb1345f3a375 // indirect
 )
