@@ -20,7 +20,6 @@ func init() {
 	// when doing "go test ./tests -v", I am getting "pwd" as "/Users/home/goRubu/tests"
 	// when doing make execute or go run main.go, I am getting "pwd" as
 	// "Users/home/goRubu"
-
 	dir, _ := os.Getwd()
 	envFile := "variables.env"
 	if strings.Contains(dir, "test") {
@@ -28,7 +27,6 @@ func init() {
 	}
 
 	log.Println("Working dir", dir)
-
 	if err := godotenv.Load(envFile); err != nil {
 		log.Fatal("Error: No .env file found, dbCon.go ", err)
 	}
@@ -40,18 +38,15 @@ func CreateCon() *mongo.Client {
 
 	clientOptions := options.Client().ApplyURI(dbDomain)
 	client, err := mongo.Connect(context.TODO(), clientOptions)
-
 	if err != nil {
 		log.Fatal("Connection Failed", err)
 	}
 
 	err = client.Ping(context.TODO(), nil)
-
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	log.Println("Connected to Mongo!")
 	return client
-
 }
