@@ -27,7 +27,7 @@ func (mrw *myResponseWriter) Write(p []byte) (int, error) {
 	return mrw.buf.Write(p)
 }
 
-// NOTE when I read body, it becomes empty and I cannot read it twice.
+// GetUrlFromReq - NOTE when I read body, it becomes empty and I cannot read it twice.
 // it happens because it is of type ReadCloser
 // https://code-examples.net/en/q/2907302
 func GetUrlFromReq(w http.ResponseWriter, r *http.Request) response {
@@ -40,7 +40,7 @@ func GetUrlFromReq(w http.ResponseWriter, r *http.Request) response {
 	}
 
 	var input inputUrl
-	json.Unmarshal(body, &input)
+	_ = json.Unmarshal(body, &input)
 
 	// Work / inspect body. You may even modify it!
 
@@ -59,7 +59,7 @@ func GetUrlFromReq(w http.ResponseWriter, r *http.Request) response {
 
 }
 
-// check whether "Url" as a key exists in request body or not
+// CheckApiKey - check whether "Url" as a key exists in request body or not
 func CheckApiKey(h http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
@@ -78,7 +78,7 @@ func CheckApiKey(h http.Handler) http.Handler {
 		})
 }
 
-// used for logging everything
+// Logger - used for logging everything
 func Logger(h http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
