@@ -2,7 +2,7 @@
 
 <img style="float: right;" width="600" src="./assets/goRubu.png"> 
 
-> This repo contains implementation of a Url Shortner written in [Go](https://golang.org/).
+This repo contains implementation of a Url Shortner written in [Go](https://golang.org/).
 
 [![Build Status](https://travis-ci.com/rv404674/goRubu.svg?branch=master)](https://travis-ci.org/rv404674/goRubu)
 
