@@ -72,7 +72,6 @@ func init() {
 func InsertInShortenedUrl(urlModel model.UrlModel) {
 
 	collection := client.Database(DB_NAME).Collection(COLLECTION1_NAME)
-	//collection := db.Collection(COLLECTION1_NAME)
 	insertResult, err := collection.InsertOne(context.Background(), urlModel)
 
 	if err != nil {

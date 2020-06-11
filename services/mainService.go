@@ -59,7 +59,7 @@ func CreateShortenedUrl(inputUrl string) string {
 
 	counterVal := dao.GetCounterValue()
 	new_url := GenerateShortenedUrl(counterVal)
-	inputModel := model.UrlModel{UniqueId: counterVal, Url: inputUrl, Created_at: time.Now()}
+	inputModel := model.UrlModel{UniqueId: counterVal, Url: inputUrl, CreatedAt: time.Now()}
 
 	//first update the cache with (key,val) => (new_url, inputUrl)
 	err = mc.Set(&memcache.Item{
@@ -132,7 +132,7 @@ func RemovedExpiredEntries() {
 		// manually
 		// (key->val) = (https://fs.com -> www.google.com)
 
-		var start time.Time = input.Created_at
+		var start time.Time = input.CreatedAt
 		a := time.Since(start)
 		b := a.Seconds()
 
