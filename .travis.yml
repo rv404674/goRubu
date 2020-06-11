@@ -3,7 +3,7 @@ language: go
 
 go:
 - 1.x
-- master
+
 
 before_install:
     - go get github.com/axw/gocov/gocov
