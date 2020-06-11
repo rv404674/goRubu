@@ -13,7 +13,7 @@ type inputUrl struct {
 	Url string `json:"Url"`
 }
 
-type MyResponseWriter struct {
+type myResponseWriter struct {
 	http.ResponseWriter
 	buf *bytes.Buffer
 }
@@ -23,15 +23,14 @@ type response struct {
 	UrlValue string
 }
 
-func (mrw *MyResponseWriter) Write(p []byte) (int, error) {
+func (mrw *myResponseWriter) Write(p []byte) (int, error) {
 	return mrw.buf.Write(p)
 }
 
+// GetUrlFromReq - NOTE when I read body, it becomes empty and I cannot read it twice.
+// it happens because it is of type ReadCloser
+// https://code-examples.net/en/q/2907302
 func GetUrlFromReq(w http.ResponseWriter, r *http.Request) response {
-
-	// NOTE when I read body, it becomes empty and I cannot read it twice.
-	// it happens because it is of type ReadCloser
-	// https://code-examples.net/en/q/2907302
 
 	body, err := ioutil.ReadAll(r.Body)
 
@@ -41,7 +40,7 @@ func GetUrlFromReq(w http.ResponseWriter, r *http.Request) response {
 	}
 
 	var input inputUrl
-	json.Unmarshal(body, &input)
+	_ = json.Unmarshal(body, &input)
 
 	// Work / inspect body. You may even modify it!
 
@@ -49,7 +48,7 @@ func GetUrlFromReq(w http.ResponseWriter, r *http.Request) response {
 	r.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 
 	// Create a response wrapper:
-	mrw := &MyResponseWriter{
+	mrw := &myResponseWriter{
 		ResponseWriter: w,
 		buf:            &bytes.Buffer{},
 	}
@@ -60,8 +59,8 @@ func GetUrlFromReq(w http.ResponseWriter, r *http.Request) response {
 
 }
 
+// CheckApiKey - check whether "Url" as a key exists in request body or not
 func CheckApiKey(h http.Handler) http.Handler {
-	// check whether "Url" as a key exists in request body or not
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			// work for both "url" and "Url"
@@ -79,8 +78,8 @@ func CheckApiKey(h http.Handler) http.Handler {
 		})
 }
 
+// Logger - used for logging everything
 func Logger(h http.Handler) http.Handler {
-	// used for logging everything
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			t1 := time.Now()
