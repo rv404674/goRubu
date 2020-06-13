@@ -10,13 +10,17 @@ This repo contains implementation of a Url Shortner written in [Go](https://gola
 
 ## What is goRubu? 🚀
 
-1. A URL Shortner written in Go, with a Mongo based backend.
-2. Supports Caching for Hot URLs, with Memcached, using an LRU based eviction strategy, and write through a type of caching mechanism.
-3. Prometheus and Grafana based monitoring, to get an overall picture of the system and application metrics.
-4. Contains Api Validation and Logging Middlewares, along with Swagger based documentation.
+1. A Url Shortner written in Go , with a Mongo based backend.
+2. Supports Caching for Hot urls, with Memcached, using a LRU based eviction
+strategy, and write through type of caching mechanism. Saw 50% decrease in
+Read Latency for URL redirection, after caching.
+3. Used Travis CI to add CI/CD pipeline and dockerized the whole application, so
+that it can be easily deployed and can be scaled up/down depending on the load.
+4. Prometheus and Grafana based monitoring, to get an overall picture of the
+system and application metrics.
+5. Contains Api Validation and Logging Middlewares, along with Swagger based documentation
 
 Monitoring:
-
 
 <img style="float: right;" width="600" src="./assets/application_metrics.png"> 
  
@@ -50,7 +54,7 @@ $ brew service start service_name
 ```
 
 Then we need to download the tar files for prometheus, grafana and node exporter.
-We will need to edit their config files, hence we are not using brew install for these. Also it becomes run the server and do changes.
+We will need to edit their config files, hence we are not using brew install for these. Also it becomes easy to run the server and do changes.
 
 **For Grafana**
 ```bash
@@ -113,6 +117,7 @@ Peformance Improvements, bug fixes, better design approaches are welcome. Please
 # Maintainer 😎
 
 [Rahul Verma](https://www.linkedin.com/in/rahul-verma-8aa59b116/)
+[Email](rv404674@gmail.com)
 
 ## License
 
