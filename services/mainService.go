@@ -12,18 +12,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/joho/godotenv"
-	"github.com/rainycape/memcache"
 )
-
-// Race Condition - Undesirable condition where o/p of a program depends on the seq of
-// execution of go routines
-
-// To prevent this use Mutex - a locking mechanism, to ensure only one Go routine
-// is running in the CS at any point of time
 
 var mc *memcache.Client
 
+//var CACHE_EXPIRATION int64
 var err error
 
 // EXPIRY_TIME - TTL for an item int cache
@@ -44,13 +39,7 @@ func init() {
 	// EXPIRY_TIME is cache expiry time and db expiry time as well
 
 	EXPIRY_TIME, _ = strconv.Atoi(os.Getenv("EXPIRATION_TIME"))
-
-	mc, err = memcache.New(os.Getenv("MEMCACHED_DOMAIN"))
-	if err != nil {
-		log.Fatal("Unable to establish connection with the cache")
-	} else {
-		log.Println("Connection to Memcached Established")
-	}
+	mc = memcache.New(os.Getenv("MEMCACHED_DOMAIN"))
 
 }
 
@@ -72,16 +61,24 @@ func CreateShortenedUrl(inputUrl string) string {
 		log.Fatal("Error in setting memcached value ", err)
 	}
 
-	// TODO handle Race Conditions. Also use transaction.
+	// Race Condition - Undesirable condition where o/p of a program depends on the seq of execution of go routines
+
+	// To prevent this use Mutex - a locking mechanism, to ensure only one Go routine
+	// is running in the CS at any point of time
+
+	// TODO handle Race Conditions. Also use transaction to enable consistency.
+	// You could have mutexes as well, but mutex would have guaranteed consistency.
 	dao.InsertInShortenedUrl(inputModel)
 	dao.UpdateCounter()
 	return newUrl
+
 }
 
 //UrlRedirection - will return back the original url from which the inputUrl was created
 func UrlRedirection(inputUrl string) string {
 	// try hitting the cache first
 	// stored as "https://goRubu/MTW" -> "www.google.com"
+
 	url, err := mc.Get(inputUrl)
 	if err == nil {
 		log.Println("Shortened url found in cache", string(url.Value))
@@ -97,7 +94,6 @@ func UrlRedirection(inputUrl string) string {
 
 	byteNumber, _ := base64.StdEncoding.DecodeString(encodedForm)
 	UniqueId, _ := strconv.Atoi(string(byteNumber))
-
 	urlModel := dao.GetUrl(UniqueId)
 
 	err2 := mc.Set(&memcache.Item{
