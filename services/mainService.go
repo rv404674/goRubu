@@ -37,8 +37,6 @@ func init() {
 		envFile = "../variables.env"
 	}
 
-	log.Println("Working dir", dir)
-
 	if err := godotenv.Load(envFile); err != nil {
 		log.Fatal("Unable to load env file from urlCreationService Init", err)
 	}
@@ -75,7 +73,7 @@ func CreateShortenedUrl(inputUrl string) string {
 		log.Fatal("Error in setting memcached value ", err)
 	}
 
-	// TODO handle Race Conditions
+	// TODO handle Race Conditions. Also use transaction.
 	dao.InsertInShortenedUrl(inputModel)
 	dao.UpdateCounter()
 	return new_url
@@ -83,13 +81,6 @@ func CreateShortenedUrl(inputUrl string) string {
 
 //UrlRedirection - will return back the original url from which the inputUrl was created
 func UrlRedirection(inputUrl string) string {
-	// https://goRubu/MTAwMDE=
-	i := strings.Index(inputUrl, "Rubu/")
-	encodedForm := inputUrl[i+5:]
-
-	byteNumber, _ := base64.StdEncoding.DecodeString(encodedForm)
-	UniqueId, _ := strconv.Atoi(string(byteNumber))
-
 	// try hitting the cache first
 	// stored as "https://goRubu/MTW" -> "www.google.com"
 	url, err := mc.Get(inputUrl)
@@ -101,6 +92,13 @@ func UrlRedirection(inputUrl string) string {
 	}
 
 	// if its a cache miss, fetch the value from db and update the cache.
+	// https://goRubu/MTAwMDE=
+	i := strings.Index(inputUrl, "Rubu/")
+	encodedForm := inputUrl[i+5:]
+
+	byteNumber, _ := base64.StdEncoding.DecodeString(encodedForm)
+	UniqueId, _ := strconv.Atoi(string(byteNumber))
+
 	urlModel := dao.GetUrl(UniqueId)
 
 	err2 := mc.Set(&memcache.Item{
@@ -117,7 +115,7 @@ func UrlRedirection(inputUrl string) string {
 	return urlModel.Url
 }
 
-// RemovedExpiredEntries -removed the db entries that are in the db for more than one min. this function is being run by a cron after every 5 min
+// RemovedExpiredEntries -removed the db entries that are in the db for more than three min. this function is being run by a cron after every 5 min
 func RemovedExpiredEntries() {
 
 	cur := dao.GetAll()
@@ -125,13 +123,12 @@ func RemovedExpiredEntries() {
 	for cur.Next(context.TODO()) {
 		var input model.UrlModel
 		if err := cur.Decode(&input); err != nil {
-			log.Fatal("Error while decoding cursor value into model")
+			log.Fatal("Error while decoding cursor value into model ", err)
 		}
 
 		// unique id is the counter val
 		// we need to delete url from cache as well
-		// but as our expiry time for db and cache is same. We dont need to delete it
-		// manually
+		// but as our expiry time for db and cache is same. We dont need to delete it manually
 		// (key->val) = (https://fs.com -> www.google.com)
 
 		var start time.Time = input.CreatedAt

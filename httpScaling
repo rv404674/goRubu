@@ -13,5 +13,3 @@ it is trivial to OOM a Go http server that uses the std library naively by causi
 many goroutines to be active at the same time.
 
 Probably will crash at 40k goroutineS
-
-Goril
