@@ -24,7 +24,6 @@ import (
 
 var mc *memcache.Client
 
-var CACHE_EXPIRATION int64
 var err error
 
 // EXPIRY_TIME - TTL for an item int cache
@@ -59,12 +58,12 @@ func init() {
 func CreateShortenedUrl(inputUrl string) string {
 
 	counterVal := dao.GetCounterValue()
-	new_url := GenerateShortenedUrl(counterVal)
+	newUrl := GenerateShortenedUrl(counterVal)
 	inputModel := model.UrlModel{UniqueId: counterVal, Url: inputUrl, CreatedAt: time.Now()}
 
-	//first update the cache with (key,val) => (new_url, inputUrl)
+	//first update the cache with (key,val) => (newUrl, inputUrl)
 	err = mc.Set(&memcache.Item{
-		Key:        new_url,
+		Key:        newUrl,
 		Value:      []byte(inputUrl),
 		Expiration: int32(EXPIRY_TIME),
 	})
@@ -76,7 +75,7 @@ func CreateShortenedUrl(inputUrl string) string {
 	// TODO handle Race Conditions. Also use transaction.
 	dao.InsertInShortenedUrl(inputModel)
 	dao.UpdateCounter()
-	return new_url
+	return newUrl
 }
 
 //UrlRedirection - will return back the original url from which the inputUrl was created

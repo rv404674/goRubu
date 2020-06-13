@@ -48,8 +48,7 @@ func FloatToString(inputNum float64) string {
 	return strconv.FormatFloat(inputNum, 'f', 6, 64)
 }
 
-// PrometheusMonitoring
-// This middleware will be use to address these things
+// PrometheusMonitoring - This middleware will be use to address these things
 // which REST endpoints are most used by consumers?
 // how often?
 // what are the response times?
@@ -88,7 +87,7 @@ func CreateUrlHandler(w http.ResponseWriter, r *http.Request) {
 	//json.NewEncoder(w).Encode(Response{Message: "Success", ShortenedUrl: shortenedUrl})
 }
 
-//RedirectionUrlHandler - will return the original from which the shortened url was created
+//RedirectionHandler - will return the original from which the shortened url was created
 func RedirectionHandler(w http.ResponseWriter, r *http.Request) {
 	orgUrl := service.UrlRedirection(middlewares.GetUrlFromReq(w, r).UrlValue)
 	if orgUrl == "" {
