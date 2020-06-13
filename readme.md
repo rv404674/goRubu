@@ -20,10 +20,15 @@ that it can be easily deployed and can be scaled up/down depending on the load.
 system and application metrics.
 5. Contains Api Validation and Logging Middlewares, along with Swagger based documentation
 
-Monitoring:
+## Monitoring:
 
+**Grafana on Top of Prometheus**
 <img style="float: right;" width="600" src="./assets/application_metrics.png"> 
  
+ **Prometheus**
+<img style="float: right;" width="600" src="./assets/prometheus_targets.png"> 
+
+
 ##  Why goRubu? 🧐
 
 Wanted to Learn Go and system design by building a project. Hence goRubu.
