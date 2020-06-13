@@ -26,7 +26,6 @@ func init() {
 		envFile = "../variables.env"
 	}
 
-	log.Println("Working dir", dir)
 	if err := godotenv.Load(envFile); err != nil {
 		log.Fatal("Error: No .env file found, dbCon.go ", err)
 	}
