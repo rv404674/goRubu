@@ -1,0 +1,44 @@
+version: '3'
+services: 
+    mongodb:
+        image: mongo
+        #container_name: gomongo' # give your container your name
+        volumes:
+            # you want data to persist in ./gorubu/mongo-data of your local machine.
+            - "mongodata:/data/db"
+        ports: 
+            # bind your local host's port (27019) to the container's port.
+            - '27019:27017'
+        networks: 
+            - network1
+
+volumes: 
+    mongodata:
+
+networks:
+    network1:
+
+
+    # cache:
+    #     image: memcached
+    #     container_name: gorubu-memcached-container
+    #     #volumes:
+    #     #    - ~/gorubu/memacached-data:/data/db 
+    #     ports: 
+    #         - '11211-11213:11211-11213'
+    
+    # services 
+    # app:
+    #     depends_on: 
+    #         - database
+    #     # this tells docker compose to use this docker file to build its images
+    #     # use image to use prebuilt image
+    #     #container_name: gorubu
+    #     build: 
+    #         context: .
+    #         dockerfile: Dockerfile
+    #     volumes: 
+    #         - ~/gorubu/logs:/app/logs
+    #     ports: 
+    #         - 8080:8080
+
