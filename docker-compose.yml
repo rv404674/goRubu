@@ -9,6 +9,9 @@ services:
         # NOTE
         # WARNING: The "database" service specifies a port on the host. If multiple containers for this service are created on a single host, the port will clash. So basically you cant scale database alone.
 
+        # TO solve the scaling problem
+        # https://pspdfkit.com/blog/2018/how-to-use-docker-compose-to-run-multiple-instances-of-a-service-in-development/
+
         image: mongo
         #container_name: gomongo' # give your container your name
         volumes:
@@ -20,7 +23,7 @@ services:
             # you need version 3.2
         ports: 
             # bind your local host's port (27019) to the container's port.
-            - '27017-27020:27017-27020'
+            - '27017:27017'
         networks: 
             - network1
     
