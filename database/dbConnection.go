@@ -32,28 +32,44 @@ func init() {
 	}
 }
 
+func tryMongo(dbDomain string) *mongo.Client {
+	clientOptions := options.Client().ApplyURI(dbDomain)
+	client, err := mongo.Connect(context.TODO(), clientOptions)
+	if err != nil {
+		log.Print("Err: ", err)
+	}
+
+	err = client.Ping(context.TODO(), nil)
+
+	if err != nil {
+		log.Printf("Dbdomain %v", dbDomain)
+		return nil
+	}
+
+	return client
+}
+
 // CreateCon - create db connection
 // support both mongo - one on localhost and other on docker
 func CreateCon() *mongo.Client {
 	var dbDomain = os.Getenv("DB_DOMAIN_DOCKER")
+	var client *mongo.Client
 
-	clientOptions := options.Client().ApplyURI(dbDomain)
-	client, err := mongo.Connect(context.TODO(), clientOptions)
-	err = client.Ping(context.TODO(), nil)
+	client = tryMongo(dbDomain)
+	if client == nil {
+		dbDomain = os.Getenv("DB_DOMAIN_LOCALHOST")
+		log.Println("Connection Failed while connecting to mongo container")
 
-	if err != nil {
-		log.Println("Connection Failed while connecting to mongo container. Error: ", err)
-		clientOptions = options.Client().ApplyURI(os.Getenv("DB_DOMAIN_LOCALHOST"))
-		client, err = mongo.Connect(context.TODO(), clientOptions)
+		client = tryMongo(dbDomain)
 
-		err2 := client.Ping(context.TODO(), nil)
-
-		if err2 != nil {
+		if client == nil {
 			log.Fatal("Connection to both Mongo Container and Local Mongo Failed")
 		}
 
+		log.Println("Connected to Local Mongo !")
+	} else {
+		log.Println("Connected to Mongo Container!")
 	}
 
-	log.Println("Connected to Mongo!")
 	return client
 }
