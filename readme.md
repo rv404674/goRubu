@@ -10,15 +10,15 @@ This repo contains implementation of a Url Shortner written in [Go](https://gola
 
 ## Contents
 
-- [About](#what-is-gorubu?-:rocket:)
+- [About](#what-is-gorubu?)
 - [Monitoring](#monitoring)
-- [Why goRubu](#why-gorubu?-:dog:)
+- [Why goRubu](#why-gorubu?)
 - [Running Server](#running-server-:gear:)
     - [Docker](#docker)
     - [Local](#local)
 - [API](#api)
 - [Contributing](#contributing-:beers:)
-- [Maintainer](#maintainer-:sunglasses:)
+- [Maintainer](#maintainer)
 - [License](#license)
 
 ## What is goRubu? :rocket:
@@ -34,11 +34,11 @@ system and application metrics.
 
 ## Monitoring:
 
-**Grafana on Top of Prometheus**
-<img style="float:" width="600" src="./assets/application_metrics.png"> 
- 
- **Prometheus**
-<img style="float:" width="600" src="./assets/prometheus_targets.png"> 
+<img style="float: left;" width="600" src="./assets/application_metrics.png"> Grafana on Top of Prometheus
+
+
+<img style="float: left;" width="600" src="./assets/prometheus_targets.png"> 
+Prometheus
 
 ## Why goRubu? :dog:	
 
