@@ -39,7 +39,7 @@ func init() {
 	// EXPIRY_TIME is cache expiry time and db expiry time as well
 
 	EXPIRY_TIME, _ = strconv.Atoi(os.Getenv("EXPIRATION_TIME"))
-	mc = memcache.New(os.Getenv("MEMCACHED_DOMAIN"))
+	mc = memcache.New(os.Getenv("MEMCACHED_DOMAIN_DOCKER"))
 
 }
 
@@ -58,7 +58,20 @@ func CreateShortenedUrl(inputUrl string) string {
 	})
 
 	if err != nil {
-		log.Fatal("Error in setting memcached value ", err)
+		log.Println("Error in setting memcached value Using Memcached Container", err)
+		log.Println("Switching to Local Memcached")
+		mc = memcache.New(os.Getenv("MEMCACHED_DOMAIN_LOCALHOST"))
+
+		err = mc.Set(&memcache.Item{
+			Key:        newUrl,
+			Value:      []byte(inputUrl),
+			Expiration: int32(EXPIRY_TIME),
+		})
+
+		if err != nil {
+			log.Fatal("Error in setting memcached value using both local and containerized Memcache")
+			log.Fatal(err)
+		}
 	}
 
 	// Race Condition - Undesirable condition where o/p of a program depends on the seq of execution of go routines
