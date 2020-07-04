@@ -34,8 +34,8 @@ system and application metrics.
 
 ## Monitoring:
 
-<img style="float: left;" width="600" src="./assets/application_metrics.png"> Grafana on Top of Prometheus
-
+<img style="float: left;" width="600" src="./assets/application_metrics.png"> 
+<p align="left"> Grafana on Top of Prometheus </p>
 
 <img style="float: left;" width="600" src="./assets/prometheus_targets.png"> 
 Prometheus
