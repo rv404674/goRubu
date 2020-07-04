@@ -1,44 +1,60 @@
-version: '3'
+# NOTE
+# if you run multiple containers via compose, you can access one container from the other by the container name,
+
+# Basically when docker-compose starts, it sets up the network, and each container in the compose joins the network under its container name. For a container's point if view, localhost is just the container itself, while he can search for other container's name and get back the container’s IP address.
+
+version: '3.2'
 services: 
-    mongodb:
+    database:
+        # NOTE
+        # WARNING: The "database" service specifies a port on the host. If multiple containers for this service are created on a single host, the port will clash. So basically you cant scale database alone.
+
         image: mongo
         #container_name: gomongo' # give your container your name
         volumes:
+            - type: volume
+              source: mongodata
+              target: /data/db
             # you want data to persist in ./gorubu/mongo-data of your local machine.
-            - "mongodata:/data/db"
+            # - "mongodata:/data/db". This will work with version 3.0 as well, but for the above notation
+            # you need version 3.2
         ports: 
             # bind your local host's port (27019) to the container's port.
-            - '27019:27017'
+            - '27017-27020:27017-27020'
         networks: 
             - network1
+    
+    cache:
+        image: memcached
+        volumes:
+            - type: volume
+              source: cachedata
+              target: /data/db
+        ports: 
+            - '11211:11211'
+        networks: 
+            - network1
+    
+    app:
+        depends_on: 
+            - database
+            - cache
+        # this tells docker compose to use this docker file to build its images
+        # use image to use prebuilt image
+        # container_name: gorubu_docker
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        networks:
+            - network1
+        ports: 
+            - 8080:8080
+    
 
 volumes: 
     mongodata:
+    cachedata:
 
 networks:
     network1:
-
-
-    # cache:
-    #     image: memcached
-    #     container_name: gorubu-memcached-container
-    #     #volumes:
-    #     #    - ~/gorubu/memacached-data:/data/db 
-    #     ports: 
-    #         - '11211-11213:11211-11213'
     
-    # services 
-    # app:
-    #     depends_on: 
-    #         - database
-    #     # this tells docker compose to use this docker file to build its images
-    #     # use image to use prebuilt image
-    #     #container_name: gorubu
-    #     build: 
-    #         context: .
-    #         dockerfile: Dockerfile
-    #     volumes: 
-    #         - ~/gorubu/logs:/app/logs
-    #     ports: 
-    #         - 8080:8080
-
