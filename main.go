@@ -17,6 +17,7 @@ func executeCronJob() {
 }
 
 func main() {
+	log.Printf("Inside GoRubu. Starting the project")
 
 	server := &http.Server{
 		Addr:    ":8080",
@@ -26,7 +27,7 @@ func main() {
 	log.Printf("Starting HTTP Server, Listening at %s", server.Addr)
 
 	// start your cron service in a go routine
-	go executeCronJob()
+	// go executeCronJob()
 
 	// GO thing. You can declare and then use the same variable if.
 	if err := server.ListenAndServe(); err != http.ErrServerClosed {
