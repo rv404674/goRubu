@@ -8,23 +8,56 @@ This repo contains implementation of a Url Shortner written in [Go](https://gola
 [![Coverage Status](https://coveralls.io/repos/github/rv404674/goRubu/badge.svg?branch=master)](https://coveralls.io/github/rv404674/goRubu?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/rv404674/goRubu)](https://goreportcard.com/report/github.com/rv404674/goRubu)
 
-## What is goRubu? 🚀
+## Contents
 
-1. A URL Shortner written in Go, with a Mongo based backend.
-2. Supports Caching for Hot URLs, with Memcached, using an LRU based eviction strategy, and write through a type of caching mechanism.
-3. Prometheus and Grafana based monitoring, to get an overall picture of the system and application metrics.
-4. Contains Api Validation and Logging Middlewares, along with Swagger based documentation.
+- What is goRubu
+- Monitoring
+- Why goRubu
+- Running Server
+    - Docker
+    - Local
+- Api's
+- Contributing
+- Maintainer
+- License
 
-Monitoring:
+## What is goRubu? :rocket:
 
+1. A Url Shortner written in **Go**, with Mongo based backend.
+2. Supports Caching for Hot urls, with Memcached, using a LRU based eviction
+strategy, and **write through type** of caching mechanism. Saw **[200%](commands_benchmarks.md)** decrease in Read Latency for URL redirection, after caching.
+3. Used Travis CI for adding a **CI/CD** pipeline.
+4. Dockerized the whole application. Used **Docker compose** for tying up different containers and **multi-stage build** for reducing the size of docker image by **[900%](commands_benchmarks.md)**. 
+4. **Prometheus and Grafana based monitoring**, to get an overall picture of the
+system and application metrics.
+5. Contains Api Validation and Logging Middlewares, along with Swagger based documentation
 
-<img style="float: right;" width="600" src="./assets/application_metrics.png"> 
- 
-##  Why goRubu? 🧐
+## Monitoring:
+
+<img style="float: left;" width="600" src="./assets/application_metrics.png"> 
+<p align="left"> Grafana on Top of Prometheus </p>
+
+<img style="float: left;" width="600" src="./assets/prometheus_targets.png"> 
+<p align="left"> Prometheus </p>
+
+## Why goRubu? :dog:	
 
 Wanted to Learn Go and system design by building a project. Hence goRubu.
 
-## Prerequisites ✅
+## Running Server :gear:
+
+### DOCKER
+
+1. You need to have [docker](https://www.docker.com/) and **docker-compose** installed. After that just to
+```bash
+make docker
+```
+
+Check the Api's Section afterwards.
+
+### LOCAL
+
+### Prerequisites ✅
 
 Ensure you have the following installed.
 **[Mongodb](https://docs.mongodb.com/manual/)** 
@@ -50,7 +83,7 @@ $ brew service start service_name
 ```
 
 Then we need to download the tar files for prometheus, grafana and node exporter.
-We will need to edit their config files, hence we are not using brew install for these. Also it becomes run the server and do changes.
+We will need to edit their config files, hence we are not using brew install for these. Also it becomes easy to run the server and do changes.
 
 **For Grafana**
 ```bash
@@ -65,7 +98,8 @@ cd /usr/local/bin/grafana-6.7.3/bin
 
 Similarly download tar files for prometheus and node exporter and run there servers as well.
 
- ## Usage ⚙️
+### Step to Run locally
+
 1. Go to the dir where prometheus is installed and change the prometheus default .yml file to this one [new_yml](prometheus.yml), run the prometheus server, and node_exporter server.
 
 2. do 
@@ -80,13 +114,14 @@ It will install all the go dependencies.
 
 4. Then do 
 ```bash
-make setup
 make install
 make execute
 ```
 > **Note**: To see what these commands do check out this [makefile](Makefile)
 
-5. Hit **http://localhost:8080/all/shorten_url** with any url as key.
+## API :computer:
+
+1. Hit **http://localhost:8080/all/shorten_url** with any url as key.
 ```json
 {
 	"Url": "https://www.redditgifts.com/exchanges/manage"
@@ -95,24 +130,25 @@ make execute
 
 The endpoint will return a shortened URL.
 
-6. Hit **http://localhost:8080/all/redirect** with the shortened url to get the original URL back.
+2. Hit **http://localhost:8080/all/redirect** with the shortened url to get the original URL back.
 ```json
 {
 	"Url": "https://goRubu/MTAxMTA="
 }
 ```
 
-5. Hit **http://localhost:9090/targets** (its where prometheus server will be running).
+3. Hit **http://localhost:9090/targets** (its where prometheus server will be running).
 If everything is working fine, The UI should look something like this
 <img style="float: right;" width="500" src="./assets/prometheus_targets.png"> 
 
-# Contributing 🍻
+# Contributing :beers:
 
 Peformance Improvements, bug fixes, better design approaches are welcome. Please Discuss your change by raising an issue, beforehand.
 
-# Maintainer 😎
+# Maintainer :sunglasses:
 
-[Rahul Verma](https://www.linkedin.com/in/rahul-verma-8aa59b116/)
+[Rahul Verma Linkedin](https://www.linkedin.com/in/rahul-verma-8aa59b116/)
+[Email](rv404674@gmail.com)
 
 ## License
 

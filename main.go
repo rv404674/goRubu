@@ -17,6 +17,7 @@ func executeCronJob() {
 }
 
 func main() {
+	log.Printf("Inside GoRubu. Starting the project")
 
 	server := &http.Server{
 		Addr:    ":8080",

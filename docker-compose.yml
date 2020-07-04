@@ -1,0 +1,63 @@
+# NOTE
+# if you run multiple containers via compose, you can access one container from the other by the container name,
+
+# Basically when docker-compose starts, it sets up the network, and each container in the compose joins the network under its container name. For a container's point if view, localhost is just the container itself, while he can search for other container's name and get back the container’s IP address.
+
+version: '3.2'
+services: 
+    database:
+        # NOTE
+        # WARNING: The "database" service specifies a port on the host. If multiple containers for this service are created on a single host, the port will clash. So basically you cant scale database alone.
+
+        # TO solve the scaling problem
+        # https://pspdfkit.com/blog/2018/how-to-use-docker-compose-to-run-multiple-instances-of-a-service-in-development/
+
+        image: mongo
+        #container_name: gomongo' # give your container your name
+        volumes:
+            - type: volume
+              source: mongodata
+              target: /data/db
+            # you want data to persist in ./gorubu/mongo-data of your local machine.
+            # - "mongodata:/data/db". This will work with version 3.0 as well, but for the above notation
+            # you need version 3.2
+        ports: 
+            # bind your local host's port (27019) to the container's port.
+            - '27017:27017'
+        networks: 
+            - network1
+    
+    cache:
+        image: memcached
+        volumes:
+            - type: volume
+              source: cachedata
+              target: /data/db
+        ports: 
+            - '11211:11211'
+        networks: 
+            - network1
+    
+    app:
+        depends_on: 
+            - database
+            - cache
+        # this tells docker compose to use this docker file to build its images
+        # use image to use prebuilt image
+        # container_name: gorubu_docker
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        networks:
+            - network1
+        ports: 
+            - 8080:8080
+    
+
+volumes: 
+    mongodata:
+    cachedata:
+
+networks:
+    network1:
+    

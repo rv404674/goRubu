@@ -12,19 +12,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/joho/godotenv"
-	"github.com/rainycape/memcache"
 )
-
-// Race Condition - Undesirable condition where o/p of a program depends on the seq of
-// execution of go routines
-
-// To prevent this use Mutex - a locking mechanism, to ensure only one Go routine
-// is running in the CS at any point of time
 
 var mc *memcache.Client
 
-var CACHE_EXPIRATION int64
+//var CACHE_EXPIRATION int64
 var err error
 
 // EXPIRY_TIME - TTL for an item int cache
@@ -37,8 +31,6 @@ func init() {
 		envFile = "../variables.env"
 	}
 
-	log.Println("Working dir", dir)
-
 	if err := godotenv.Load(envFile); err != nil {
 		log.Fatal("Unable to load env file from urlCreationService Init", err)
 	}
@@ -47,13 +39,7 @@ func init() {
 	// EXPIRY_TIME is cache expiry time and db expiry time as well
 
 	EXPIRY_TIME, _ = strconv.Atoi(os.Getenv("EXPIRATION_TIME"))
-
-	mc, err = memcache.New(os.Getenv("MEMCACHED_DOMAIN"))
-	if err != nil {
-		log.Fatal("Unable to establish connection with the cache")
-	} else {
-		log.Println("Connection to Memcached Established")
-	}
+	mc = memcache.New(os.Getenv("MEMCACHED_DOMAIN_DOCKER"))
 
 }
 
@@ -61,37 +47,51 @@ func init() {
 func CreateShortenedUrl(inputUrl string) string {
 
 	counterVal := dao.GetCounterValue()
-	new_url := GenerateShortenedUrl(counterVal)
+	newUrl := GenerateShortenedUrl(counterVal)
 	inputModel := model.UrlModel{UniqueId: counterVal, Url: inputUrl, CreatedAt: time.Now()}
 
-	//first update the cache with (key,val) => (new_url, inputUrl)
+	//first update the cache with (key,val) => (newUrl, inputUrl)
 	err = mc.Set(&memcache.Item{
-		Key:        new_url,
+		Key:        newUrl,
 		Value:      []byte(inputUrl),
 		Expiration: int32(EXPIRY_TIME),
 	})
 
 	if err != nil {
-		log.Fatal("Error in setting memcached value ", err)
+		log.Println("Error in setting memcached value Using Memcached Container", err)
+		log.Println("Switching to Local Memcached")
+		mc = memcache.New(os.Getenv("MEMCACHED_DOMAIN_LOCALHOST"))
+
+		err = mc.Set(&memcache.Item{
+			Key:        newUrl,
+			Value:      []byte(inputUrl),
+			Expiration: int32(EXPIRY_TIME),
+		})
+
+		if err != nil {
+			log.Fatal("Error in setting memcached value using both local and containerized Memcache")
+			log.Fatal(err)
+		}
 	}
 
-	// TODO handle Race Conditions
+	// Race Condition - Undesirable condition where o/p of a program depends on the seq of execution of go routines
+
+	// To prevent this use Mutex - a locking mechanism, to ensure only one Go routine
+	// is running in the CS at any point of time
+
+	// TODO handle Race Conditions. Also use transaction to enable consistency.
+	// You could have mutexes as well, but mutex would have guaranteed consistency.
 	dao.InsertInShortenedUrl(inputModel)
 	dao.UpdateCounter()
-	return new_url
+	return newUrl
+
 }
 
 //UrlRedirection - will return back the original url from which the inputUrl was created
 func UrlRedirection(inputUrl string) string {
-	// https://goRubu/MTAwMDE=
-	i := strings.Index(inputUrl, "Rubu/")
-	encodedForm := inputUrl[i+5:]
-
-	byteNumber, _ := base64.StdEncoding.DecodeString(encodedForm)
-	UniqueId, _ := strconv.Atoi(string(byteNumber))
-
 	// try hitting the cache first
 	// stored as "https://goRubu/MTW" -> "www.google.com"
+
 	url, err := mc.Get(inputUrl)
 	if err == nil {
 		log.Println("Shortened url found in cache", string(url.Value))
@@ -101,6 +101,12 @@ func UrlRedirection(inputUrl string) string {
 	}
 
 	// if its a cache miss, fetch the value from db and update the cache.
+	// https://goRubu/MTAwMDE=
+	i := strings.Index(inputUrl, "Rubu/")
+	encodedForm := inputUrl[i+5:]
+
+	byteNumber, _ := base64.StdEncoding.DecodeString(encodedForm)
+	UniqueId, _ := strconv.Atoi(string(byteNumber))
 	urlModel := dao.GetUrl(UniqueId)
 
 	err2 := mc.Set(&memcache.Item{
@@ -117,7 +123,7 @@ func UrlRedirection(inputUrl string) string {
 	return urlModel.Url
 }
 
-// RemovedExpiredEntries -removed the db entries that are in the db for more than one min. this function is being run by a cron after every 5 min
+// RemovedExpiredEntries -removed the db entries that are in the db for more than three min. this function is being run by a cron after every 5 min
 func RemovedExpiredEntries() {
 
 	cur := dao.GetAll()
@@ -125,13 +131,12 @@ func RemovedExpiredEntries() {
 	for cur.Next(context.TODO()) {
 		var input model.UrlModel
 		if err := cur.Decode(&input); err != nil {
-			log.Fatal("Error while decoding cursor value into model")
+			log.Fatal("Error while decoding cursor value into model ", err)
 		}
 
 		// unique id is the counter val
 		// we need to delete url from cache as well
-		// but as our expiry time for db and cache is same. We dont need to delete it
-		// manually
+		// but as our expiry time for db and cache is same. We dont need to delete it manually
 		// (key->val) = (https://fs.com -> www.google.com)
 
 		var start time.Time = input.CreatedAt

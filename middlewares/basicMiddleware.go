@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// Basic middleware - just for printing
+// BasicMiddleware - just for printing
 func BasicMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {

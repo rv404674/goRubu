@@ -61,7 +61,7 @@ func init() {
 	db := client.Database(DB_NAME)
 	collection1 := db.Collection(COLLECTION1_NAME)
 
-	// we want index on 'shortened_url' which is collection1
+	// we want index on 'uniqueid field of 'shortened_url' which is collection1
 	indexName, err := collection1.Indexes().CreateOne(context.Background(), indexModel)
 
 	if err != nil {
@@ -71,7 +71,7 @@ func init() {
 	log.Println("IndexName", indexName)
 }
 
-// InsertInShortenedUrl - this one inserts in "shortened_url" connections
+// InsertInShortenedUrl - this one inserts in "shortened_url" collection.
 // this is using call by value i.e creating copy of urlModel everytime,
 // if json is large, try to prevent this
 func InsertInShortenedUrl(urlModel model.UrlModel) {
@@ -111,13 +111,11 @@ func CleanDb(uid int) {
 	if err != nil {
 		log.Fatal("Error while deleting a doc", err)
 	}
-	// if you directly do string(deleteResult.DeletedCount) for deleteResult.DeletedCount = 67
-	// you will get C. Hence use strcov
+	// if you directly do string(deleteResult.DeletedCount) for deleteResult.DeletedCount = 67. you will get C. Hence use strcov
 	log.Println("**Deleted " + strconv.FormatInt(deleteResult.DeletedCount, 10) + " documents ")
 }
 
 // GetCounterValue - update counter field in second collections - incrementer
-// also there will be an already existing value in db (i.e counter will start from)- 10000
 // { "_id" : ObjectId("5e9b7c0e7b3a8740a2f828c4"), "uniqueid" : "counter", "value" : 10000 }
 func GetCounterValue() int {
 	// as there will be one row only
@@ -128,8 +126,10 @@ func GetCounterValue() int {
 	err := collection.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
 		log.Println("**ERROR while fetching counter value", err)
+		// its first hit. You need to create a counter value.
 		insertResult, _ := collection.InsertOne(context.Background(), models.IncrementerModel{UniqueId: "counter", Value: 10000})
 		log.Println("Initialized counter value InsertedId: ", insertResult.InsertedID)
+		_ = collection.FindOne(context.TODO(), filter).Decode(&result)
 	}
 
 	return result.Value
