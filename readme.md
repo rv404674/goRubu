@@ -98,7 +98,7 @@ cd /usr/local/bin/grafana-6.7.3/bin
 
 Similarly download tar files for prometheus and node exporter and run there servers as well.
 
-#### Step to Run locally
+### Step to Run locally
 
 1. Go to the dir where prometheus is installed and change the prometheus default .yml file to this one [new_yml](prometheus.yml), run the prometheus server, and node_exporter server.
 
@@ -119,7 +119,7 @@ make execute
 ```
 > **Note**: To see what these commands do check out this [makefile](Makefile)
 
-## API
+## API :computer:
 
 1. Hit **http://localhost:8080/all/shorten_url** with any url as key.
 ```json
