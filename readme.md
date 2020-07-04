@@ -16,10 +16,10 @@ This repo contains implementation of a Url Shortner written in [Go](https://gola
 - Running Server
     - Docker
     - Local
-- [API](#api)
-- [Contributing](#contributing-:beers:)
-- [Maintainer](#maintainer)
-- [License](#license)
+- Api's
+- Contributing
+- Maintainer
+- License
 
 ## What is goRubu? :rocket:
 
