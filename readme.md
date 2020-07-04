@@ -10,15 +10,15 @@ This repo contains implementation of a Url Shortner written in [Go](https://gola
 
 ## Contents
 
-- [About](#What-is-gorubu)
+- [About](#what-is-gorubu)
 - [Monitoring](#monitoring)
-- [Why goRubu](#Why-gorubu?-🧐)
+- [Why goRubu](##why-gorubu)
 - [Running Server](#running-Server-⚙️)
     - [Docker](#docker)
     - [Local](#local)
 - [API](#api)
 - [Contributing](#contributing-🍻)
-- [Maintainer](#maintainer-😎)
+- [Maintainer](#maintainer)
 - [License](#license)
 
 ## What is goRubu? 🚀
@@ -35,10 +35,10 @@ system and application metrics.
 ## Monitoring:
 
 **Grafana on Top of Prometheus**
-<img style="float: right;" width="600" src="./assets/application_metrics.png"> 
+<img style="float: center;" width="600" src="./assets/application_metrics.png"> 
  
  **Prometheus**
-<img style="float: right;" width="600" src="./assets/prometheus_targets.png"> 
+<img style="float: center;" width="600" src="./assets/prometheus_targets.png"> 
 
 ## Why goRubu? 🧐
 
@@ -145,7 +145,7 @@ If everything is working fine, The UI should look something like this
 
 Peformance Improvements, bug fixes, better design approaches are welcome. Please Discuss your change by raising an issue, beforehand.
 
-# Maintainer 😎
+# Maintainer :sunglasses:
 
 [Rahul Verma](https://www.linkedin.com/in/rahul-verma-8aa59b116/)
 [Email](rv404674@gmail.com)

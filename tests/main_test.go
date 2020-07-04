@@ -19,7 +19,7 @@ func commonUtility(input string, wait string) string {
 		// approx 3 min, as entries will be removed if
 		// there are in the db for more than 3 min
 		// will also be removed from after after 3 min
-		time.Sleep(182 * time.Second)
+		time.Sleep(302 * time.Second)
 		service.RemovedExpiredEntries()
 	}
 
