@@ -8,6 +8,19 @@ This repo contains implementation of a Url Shortner written in [Go](https://gola
 [![Coverage Status](https://coveralls.io/repos/github/rv404674/goRubu/badge.svg?branch=master)](https://coveralls.io/github/rv404674/goRubu?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/rv404674/goRubu)](https://goreportcard.com/report/github.com/rv404674/goRubu)
 
+## Contents
+
+- [About](#What-is-gorubu)
+- [Monitoring](#monitoring)
+- [Why goRubu](#Why-gorubu?-🧐)
+- [Running Server](#running-Server-⚙️)
+    - [Docker](#docker)
+    - [Local](#local)
+- [API](#api)
+- [Contributing](#contributing-🍻)
+- [Maintainer](#maintainer-😎)
+- [License](#license)
+
 ## What is goRubu? 🚀
 
 1. A Url Shortner written in Go, with Mongo based backend.
@@ -27,12 +40,11 @@ system and application metrics.
  **Prometheus**
 <img style="float: right;" width="600" src="./assets/prometheus_targets.png"> 
 
-
-##  Why goRubu? 🧐
+## Why goRubu? 🧐
 
 Wanted to Learn Go and system design by building a project. Hence goRubu.
 
-## Usage ⚙️
+## Running Server ⚙️
 
 ### DOCKER
 
@@ -40,6 +52,8 @@ Wanted to Learn Go and system design by building a project. Hence goRubu.
 ```bash
 make docker
 ```
+
+Check the Api's Section afterwards.
 
 ### LOCAL
 
