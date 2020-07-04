@@ -48,6 +48,15 @@ install:
 	echo "Executing go install"
 	$(GOINSTALL)
 
+build:
+	# this will build/compile the project
+	echo "Compiling goRubu"
+	$(GOBUILD) -o build/goRubu main.go
+
+run:
+	echo "Executing goRub"
+	~/goRubu/build/goRubu
+
 # make all -> will first install and then run execute
 all:
 	install execute
