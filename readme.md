@@ -114,7 +114,6 @@ It will install all the go dependencies.
 
 4. Then do 
 ```bash
-make setup
 make install
 make execute
 ```
