@@ -10,41 +10,41 @@ This repo contains implementation of a Url Shortner written in [Go](https://gola
 
 ## Contents
 
-- [About](#what-is-gorubu)
+- [About](#what-is-gorubu?-:rocket:)
 - [Monitoring](#monitoring)
-- [Why goRubu](##why-gorubu)
-- [Running Server](#running-Server-⚙️)
+- [Why goRubu](#why-gorubu?-:dog:)
+- [Running Server](#running-server-:gear:)
     - [Docker](#docker)
     - [Local](#local)
 - [API](#api)
-- [Contributing](#contributing-🍻)
-- [Maintainer](#maintainer)
+- [Contributing](#contributing-:beers:)
+- [Maintainer](#maintainer-:sunglasses:)
 - [License](#license)
 
-## What is goRubu? 🚀
+## What is goRubu? :rocket:
 
-1. A Url Shortner written in Go, with Mongo based backend.
+1. A Url Shortner written in **Go**, with Mongo based backend.
 2. Supports Caching for Hot urls, with Memcached, using a LRU based eviction
-strategy, and write through type of caching mechanism. Saw [200%](commands_benchmarks) decrease in Read Latency for URL redirection, after caching.
-3. Used Travis CI for adding a CI/CD pipeline.
-4. Dockerized the whole application. Used Docker compose for tying up different containers and multi-stage build for reducing the size of docker image by [900%](commands_benchmarks). 
-4. Prometheus and Grafana based monitoring, to get an overall picture of the
+strategy, and **write through type** of caching mechanism. Saw **[200%](commands_benchmarks.md)** decrease in Read Latency for URL redirection, after caching.
+3. Used Travis CI for adding a **CI/CD** pipeline.
+4. Dockerized the whole application. Used **Docker compose** for tying up different containers and **multi-stage build** for reducing the size of docker image by **[900%](commands_benchmarks.md)**. 
+4. **Prometheus and Grafana based monitoring**, to get an overall picture of the
 system and application metrics.
 5. Contains Api Validation and Logging Middlewares, along with Swagger based documentation
 
 ## Monitoring:
 
 **Grafana on Top of Prometheus**
-<img style="float: center;" width="600" src="./assets/application_metrics.png"> 
+<img style="float:" width="600" src="./assets/application_metrics.png"> 
  
  **Prometheus**
-<img style="float: center;" width="600" src="./assets/prometheus_targets.png"> 
+<img style="float:" width="600" src="./assets/prometheus_targets.png"> 
 
-## Why goRubu? 🧐
+## Why goRubu? :dog:	
 
 Wanted to Learn Go and system design by building a project. Hence goRubu.
 
-## Running Server ⚙️
+## Running Server :gear:
 
 ### DOCKER
 
@@ -141,13 +141,13 @@ The endpoint will return a shortened URL.
 If everything is working fine, The UI should look something like this
 <img style="float: right;" width="500" src="./assets/prometheus_targets.png"> 
 
-# Contributing 🍻
+# Contributing :beers:
 
 Peformance Improvements, bug fixes, better design approaches are welcome. Please Discuss your change by raising an issue, beforehand.
 
 # Maintainer :sunglasses:
 
-[Rahul Verma](https://www.linkedin.com/in/rahul-verma-8aa59b116/)
+[Rahul Verma Linkedin](https://www.linkedin.com/in/rahul-verma-8aa59b116/)
 [Email](rv404674@gmail.com)
 
 ## License
