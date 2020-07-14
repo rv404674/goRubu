@@ -52,6 +52,8 @@ Wanted to Learn Go and system design by building a project. Hence goRubu.
 ```bash
 make docker
 ```
+> Note - I haven't dockerized prometheus and grafana with it. Containerized goRubu and locally installed
+> prometheus and grafana will work fine as prometheus is only listening to "local:8080/metrics".
 
 Check the Api's Section afterwards.
 
