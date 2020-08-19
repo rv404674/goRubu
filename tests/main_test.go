@@ -51,13 +51,13 @@ func TestUrlcreation(t *testing.T) {
 }
 
 // check whether db cleaning service is working correctly or not.
-func TestDbpurging(t *testing.T) {
-	testUrl := "https://google.com"
-	outputUrl := commonUtility(testUrl, "yup")
+// func TestDbpurging(t *testing.T) {
+// 	testUrl := "https://google.com"
+// 	outputUrl := commonUtility(testUrl, "yup")
 
-	if outputUrl != "" {
-		t.Errorf("Test DbPurging failed. Expected %s, got %s", "", outputUrl)
-	} else {
-		t.Logf("Success, Expected %s, got %s", "", outputUrl)
-	}
-}
+// 	if outputUrl != "" {
+// 		t.Errorf("Test DbPurging failed. Expected %s, got %s", "", outputUrl)
+// 	} else {
+// 		t.Logf("Success, Expected %s, got %s", "", outputUrl)
+// 	}
+// }
