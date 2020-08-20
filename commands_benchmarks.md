@@ -8,7 +8,12 @@ get https://goRubu/MTAyMTk=
 this will give the original url, to corresponding to the shorten url.
 If you get nothing, it means there is not entry in memcached.
 
-2.  To run tests.
+2. To check Indexed in Mongo.
+```bash
+db.collection.getIndexes()
+```
+
+3. To run tests.
 ```bash
 go test ./tests -v
 go test ./tests -v - cover
@@ -16,25 +21,27 @@ go test ./tests -v - cover
 
 **NOTE** - Normally these two commands work, but with "go 1.13" they are not working.
 Hence use these
+```bash
 go test ./... -v -coverpkg=./... -coverprofile=cover.txt
 go tool cover -html=cover.txt -o cover.html
+```
 
 ## Docker 
 
-1. ```bash
+1. This will give the logs of that container.
+```bash
 docker logs container_id
 ```
-This will give the logs of that container
 
-2. ```bash
+2. Get into the container and see what is happening.
+```bash
 docker exec -it container_id /bin/sh
 ```
-Get into the container and see what is happening.
 
-3. ```bash
+3. Build an image with some name("gorubuimage") from dockerfile
+```bash
 docker build -t gorubuimage .
 ```
-Build an image with some name("gorubuimage") from dockerfile
 
 ## Benchmarks
 

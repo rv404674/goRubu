@@ -34,7 +34,7 @@ func init() {
 	envFile := "variables.env"
 	if strings.Contains(dir, "test") {
 		envFile = "../variables.env"
-		// TODO Remove .. , it is a security threat if done from root
+		// TODO: Remove .. , it is a security threat if done from root
 	}
 
 	if err := godotenv.Load(envFile); err != nil {
@@ -112,10 +112,10 @@ func CleanDb(uid int) {
 		log.Fatal("Error while deleting a doc", err)
 	}
 	// if you directly do string(deleteResult.DeletedCount) for deleteResult.DeletedCount = 67. you will get C. Hence use strcov
-	log.Println("**Deleted " + strconv.FormatInt(deleteResult.DeletedCount, 10) + " documents ")
+	log.Println("** Deleted " + strconv.FormatInt(deleteResult.DeletedCount, 10) + " documents ")
 }
 
-// GetCounterValue - update counter field in second collections - incrementer
+// GetCounterValue - update counter field in second collection - incrementer
 // { "_id" : ObjectId("5e9b7c0e7b3a8740a2f828c4"), "uniqueid" : "counter", "value" : 10000 }
 func GetCounterValue() int {
 	// as there will be one row only

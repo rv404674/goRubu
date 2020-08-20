@@ -106,14 +106,15 @@ func New() http.Handler {
 
 	hist := HistPrometheus{}
 	hist.Populate()
-	// prometheusMonitoring and CheckApiKey will be applied to all middlewares prefixed by all
+	// prometheusMonitoring ,CheckApiKey, Logger will be applied to all middlewares prefixed by all
 	mainRoute.Use(hist.PrometheusMonitoring)
 	mainRoute.Use(middlewares.CheckApiKey)
 	mainRoute.Use(middlewares.Logger)
 
-	// WILL expose default metrics for go application
-	// also as we won't be passing "url" in body, so to prevent missing key from
-	// being returned from checkApiKey middleware, we wont prefix this with all
+	// WILL expose default metrics, along with our custom metrics for go application
+	// NOTE: Prometheus follows a Pull based Mechanism instead of Push Based.
+	// Monitored applications exposes an HTTP endpoint exposing monitoring metrics.
+	// Prometheus then periodically download the metrics.
 	route.Handle("/metrics", promhttp.Handler()).Methods("GET")
 
 	mainRoute.HandleFunc("/check", Hellohandler)

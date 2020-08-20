@@ -18,10 +18,8 @@ func init() {
 	// go test was unable to find it.
 
 	// when doing "go test ./tests -v", I am getting "pwd" as "/Users/home/goRubu/tests"
-	// when doing make execute or go run main.go, I am getting "pwd" as
-	// "Users/home/goRubu"
+	// when doing make execute or go run main.go, I am getting "pwd" as "Users/home/goRubu"
 	dir, _ := os.Getwd()
-	log.Print(dir)
 	envFile := "variables.env"
 	if strings.Contains(dir, "test") {
 		envFile = "../variables.env"
@@ -42,7 +40,7 @@ func tryMongo(dbDomain string) *mongo.Client {
 	err = client.Ping(context.TODO(), nil)
 
 	if err != nil {
-		log.Printf("Dbdomain %v", dbDomain)
+		log.Printf("Err:%v, Dbdomain:%v", dbDomain, err)
 		return nil
 	}
 
@@ -51,6 +49,8 @@ func tryMongo(dbDomain string) *mongo.Client {
 
 // CreateCon - create db connection
 // support both mongo - one on localhost and other on docker
+// as this function is called in dao init function, hence it will be only ran once.
+// Advantages - we will try to establish connection with docker/local only once, not again again.
 func CreateCon() *mongo.Client {
 	var dbDomain = os.Getenv("DB_DOMAIN_DOCKER")
 	var client *mongo.Client
@@ -66,7 +66,7 @@ func CreateCon() *mongo.Client {
 			log.Fatal("Connection to both Mongo Container and Local Mongo Failed")
 		}
 
-		log.Println("Connected to Local Mongo !")
+		log.Println("Connected to Local Mongo!")
 	} else {
 		log.Println("Connected to Mongo Container!")
 	}

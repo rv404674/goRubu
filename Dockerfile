@@ -15,14 +15,12 @@ LABEL maintainer='Rahul Verma <rv404674@gmail.com>'
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
-# install dependencies
-COPY go.mod go.sum ./
+# copy the source from the current directory to the working directory inside the container
+# this will copy both go.mod go.sum as well. So no need to copy again
+COPY . .
 
 # Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
 RUN go mod download
-
-# copy the source from the current directory to the working directory inside the container
-COPY . .
 
 # Build the Go app
 # RUN go build -o main .
@@ -36,10 +34,13 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /root/
 
 # COPY the Prebuilt binary file from the previous stage
+# "COPY --from=builder /app/main/ ." No need to do this as we are copy whole app including the executables.
+# we need the whole app as well, because apart from executable our environment variables are stored in a
+# .env file.
 COPY --from=builder /app/ .
-COPY --from=builder /app/main/ .
 
 # Expose port 8080 to the outside world
+# This port should be the same one, as exposed by the app server (goRubu).
 EXPOSE 8080
 
 CMD [ "./main" ]
