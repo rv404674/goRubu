@@ -36,6 +36,7 @@ func init() {
 		log.Fatal("Unable to load env file from urlCreationService Init", err)
 	}
 
+	// memcached connection
 	mc = cacheConnection.CreateCon()
 }
 
