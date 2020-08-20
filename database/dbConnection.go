@@ -40,7 +40,7 @@ func tryMongo(dbDomain string) *mongo.Client {
 	err = client.Ping(context.TODO(), nil)
 
 	if err != nil {
-		log.Printf("Dbdomain %v", dbDomain)
+		log.Printf("Err:%v, Dbdomain:%v", dbDomain, err)
 		return nil
 	}
 
@@ -49,6 +49,8 @@ func tryMongo(dbDomain string) *mongo.Client {
 
 // CreateCon - create db connection
 // support both mongo - one on localhost and other on docker
+// as this function is called in dao init function, hence it will be only ran once.
+// Advantages - we will try to establish connection with docker/local only once, not again again.
 func CreateCon() *mongo.Client {
 	var dbDomain = os.Getenv("DB_DOMAIN_DOCKER")
 	var client *mongo.Client
