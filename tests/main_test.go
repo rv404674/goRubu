@@ -11,6 +11,7 @@ import (
 
 // main test function. Checks both url creation and url redirection
 // should start with "Test" and latter name should start with capital letter
+// TODO: Increase the text coverage. Test for negative cases as well.
 
 func commonUtility(input string, wait string) string {
 	shortenedUrl := service.CreateShortenedUrl(input)

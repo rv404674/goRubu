@@ -5,10 +5,10 @@
 telnet localhost 11211
 get https://goRubu/MTAyMTk=
 ```
-this will give the original url, to corresponding to the shorten url.
-If you get nothing, it means there is not entry in memcached.
+This will give the original url, corresponding to the shortened url.
 
-2. To check Indexed in Mongo.
+
+2. To check Indexes in Mongo.
 ```bash
 db.collection.getIndexes()
 ```
@@ -19,8 +19,11 @@ go test ./tests -v
 go test ./tests -v - cover
 ```
 
-**NOTE** - Normally these two commands work, but with "go 1.13" they are not working.
-Hence use these
+**NOTE** - Normally these two commands work, but with "go 1.13", second command (the cover one) is not working.
+
+I have integrated [coveralls.io](https://coveralls.io/) with goRubu.
+or you can use these.
+
 ```bash
 go test ./... -v -coverpkg=./... -coverprofile=cover.txt
 go tool cover -html=cover.txt -o cover.html
@@ -28,7 +31,7 @@ go tool cover -html=cover.txt -o cover.html
 
 ## Docker 
 
-1. This will give the logs of that container.
+1. This will give the logs of a particular container.
 ```bash
 docker logs container_id
 ```
