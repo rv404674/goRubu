@@ -16,23 +16,29 @@ BINARY_UNIX=$(BINARY_NAME)_unix
 
 # if we do "make run main", it will do "go run main.go"
 execute:
-	# will run the go executable, and hence the server.
-	~/go/bin/goRubu
+	- @echo "** Please wait. Connecting with Mongo, Memcached and Spinning up the Go Server **"
+	- ~/go/bin/goRubu
 
 setup:
-	export GOBIN=~/go/bin/
+	- export GOBIN=~/go/bin/
 	# my pwd is "/Users/home"
-	$(GOCMD) mod init goRubu
+	- $(GOCMD) mod init goRubu
 
 install:
-	# will build the package into a single binary.
-	echo "Executing go install"
-	$(GOINSTALL)
+	- @echo "** Will build the package into a single binary **"
+	- $(GOINSTALL)
 
 # make all -> will first install and then run execute
 all:
-	install execute
+	- install execute
 
 docker:
-	- chmod 777 scripts/build_docker.sh
-	- scripts/build_docker.sh
+	- @echo "** Spinning up the GoRubu, Mongo and Memcached Docker Containers **"
+	- @chmod 777 scripts/build_docker.sh
+	- @scripts/build_docker.sh
+
+#NOTE: @ before a command will stop showing that command.
+test:
+	- @echo "** Running Tests **"
+	- $(GOTEST) ./tests -v
+

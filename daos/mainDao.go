@@ -116,20 +116,20 @@ func CleanDb(uid int) {
 }
 
 // GetCounterValue - update counter field in second collection - incrementer
-// { "_id" : ObjectId("5e9b7c0e7b3a8740a2f828c4"), "uniqueid" : "counter", "value" : 10000 }
+// { "_id" : ObjectId("5e9b7c0e7b3a8740a2f828c4"), "value" : 10000 }
 func GetCounterValue() int {
 	// as there will be one row only
 	collection := client.Database(DB_NAME).Collection(COLLECTION2_NAME)
-	filter := bson.D{primitive.E{Key: "uniqueid", Value: "counter"}}
-
 	var result models.IncrementerModel
-	err := collection.FindOne(context.TODO(), filter).Decode(&result)
+
+	err := collection.FindOne(context.TODO(), bson.D{}).Decode(&result)
 	if err != nil {
-		log.Println("**ERROR while fetching counter value", err)
-		// its first hit. You need to create a counter value.
-		insertResult, _ := collection.InsertOne(context.Background(), models.IncrementerModel{UniqueId: "counter", Value: 10000})
-		log.Println("Initialized counter value InsertedId: ", insertResult.InsertedID)
-		_ = collection.FindOne(context.TODO(), filter).Decode(&result)
+		log.Println("** ERROR while fetching counter value", err)
+		// it's a first hit i.e that is "incrementer" collection is right now empty.
+		// You need to create a counter value.
+		insertResult, _ := collection.InsertOne(context.Background(), models.IncrementerModel{Value: 10000})
+		log.Println(" Initialized counter value InsertedId: ", insertResult.InsertedID)
+		_ = collection.FindOne(context.TODO(), bson.D{}).Decode(&result)
 	}
 
 	return result.Value
@@ -138,8 +138,6 @@ func GetCounterValue() int {
 // UpdateCounter - update the counter value by 1
 func UpdateCounter() {
 	collection := client.Database(DB_NAME).Collection(COLLECTION2_NAME)
-	filter := bson.D{primitive.E{Key: "uniqueid", Value: "counter"}}
-
 	// $inc will increase value of counter by 1
 	update := bson.D{
 		{"$inc", bson.D{
@@ -147,7 +145,7 @@ func UpdateCounter() {
 		}},
 	}
 
-	updateResult, err := collection.UpdateOne(context.TODO(), filter, update)
+	updateResult, err := collection.UpdateOne(context.TODO(), bson.D{}, update)
 	if err != nil {
 		log.Fatal("**ERROR while updating counter value", err)
 	}
