@@ -13,9 +13,7 @@ type UrlModel struct {
 }
 
 // IncrementerModel - single row table
-// uniqueid - counter
 // value 10000
 type IncrementerModel struct {
-	UniqueId string `json: "uniqueid"`
-	Value    int    `json: "value"`
+	Value int `json: "value"`
 }
