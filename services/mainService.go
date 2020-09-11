@@ -11,6 +11,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/bradfitz/gomemcache/memcache"
@@ -24,6 +25,7 @@ var err error
 
 // EXPIRY_TIME - TTL for an item int cache
 var EXPIRY_TIME int
+var mutex sync.Mutex
 
 func init() {
 	dir, _ := os.Getwd()
@@ -43,6 +45,8 @@ func init() {
 // CreateShortenedUrl - This service shortens a give url.
 func CreateShortenedUrl(inputUrl string) string {
 
+	mutex.Lock()
+	// FIXME: mutex wont guarantee consistency.
 	counterVal := dao.GetCounterValue()
 	newUrl := GenerateShortenedUrl(counterVal)
 	inputModel := model.UrlModel{UniqueId: counterVal, Url: inputUrl, CreatedAt: time.Now()}
@@ -68,6 +72,8 @@ func CreateShortenedUrl(inputUrl string) string {
 	// You could have mutexes as well, but mutex would have guaranteed consistency.
 	dao.InsertInShortenedUrl(inputModel)
 	dao.UpdateCounter()
+	mutex.Unlock()
+
 	return newUrl
 }
 
