@@ -33,6 +33,7 @@ services:
             - type: volume
               source: cachedata
               target: /data/db
+        entrypoint: "memcached -vv"     
         ports: 
             - '11211:11211'
         networks: 
