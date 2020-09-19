@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/joho/godotenv"
@@ -33,6 +34,8 @@ func init() {
 
 func tryMemcached(domain string) *memcache.Client {
 	mc := memcache.New(domain)
+	mc.MaxIdleConns = 100
+	mc.Timeout = 1000 * time.Millisecond
 
 	inputUrl := "https://stackoverflow.com/questions/58442596/golang-base64-to-hex-conversion"
 	newUrl := "https://goRubu/MTAyNDE="
