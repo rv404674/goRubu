@@ -27,7 +27,7 @@ This repo contains implementation of a **Url Shortner** written in [Go](https://
 
 ## What is goRubu? :rocket:
 
-1. A Url Shortner written in **Go**, with **Mongo based** backend.
+1. A Url Shortner written in **Go**, with **MongoDb based** backend.
 2. Supports Caching for Hot urls, with Memcached, using a LRU based eviction
 strategy, and **write through type** of caching mechanism. Saw **[200%](/benchmarking/benchmarking.md)** decrease in Read Latency for URL redirection, after caching.
 3. Used Travis CI for adding a **CI/CD** pipeline.
@@ -41,9 +41,11 @@ system and application metrics.
 Wanted to Learn Go and system design, by building a project. Hence goRubu.
 
 ## BenchMarking
-> NOTE - Url Shortner is a read heavy system (read:write = 100:1), and these load tests are done on a single Machine. Check [this](/benchmarking/benchmarking.md) out for more info.
+> NOTE - Url Shortner is a read heavy system (read:write = 100:1), and these load tests are done on a single Machine (8Gb Ram, i5 Processor).
 
-1. For **Url Redirection**, for 1000 Concurrent Users for 2 minutes -
+Check [this](/benchmarking/benchmarking.md) out for more info.
+
+1. For **Url Redirection**, with **1000 Concurrent Users**, bombarding the app server for **2mins** -
 ```bash
 http_req_duration..........: avg=2.39s    min=0s     med=2.27s max=7.51s    p(90)=3.65s p(95)=4.16s
 http_reqs..................: 49587   413.224692/s
