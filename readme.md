@@ -7,7 +7,7 @@ This repo contains implementation of a **Url Shortner** written in [Go](https://
 [![Build Status](https://travis-ci.com/rv404674/goRubu.svg?branch=master)](https://travis-ci.org/rv404674/goRubu)
 [![Coverage Status](https://coveralls.io/repos/github/rv404674/goRubu/badge.svg?branch=master)](https://coveralls.io/github/rv404674/goRubu?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/rv404674/goRubu)](https://goreportcard.com/report/github.com/rv404674/goRubu)
-[![Stars](https://img.shields.io/github/stars/rv404674/goRubu)](https://github.com/rv404674/goRubu)
+[![Stars](https://img.shields.io/github/stars/rv404674/goRubu)](https://github.com/rv404674/goRubu/stargazers)
 [![MIT License](https://img.shields.io/github/license/rv404674/goRubu)](https://github.com/rv404674/goRubu/blob/master/LICENSE)
 
 ## Contents
