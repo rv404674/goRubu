@@ -1,4 +1,5 @@
 # Benchmarks
+NOTE: These load tests are done on a single machine having 8GB Ram, a Dual-Core Intel Core i5 Processor.
 
 ## Concurrency Control
 
@@ -10,7 +11,6 @@ mutex.unlock()
 ```
 
 ### Url Redirection (Load Tested Using Docker Containers)
-
 [Graph - Url Redirection (no of Concurrent Users vs Response Time)](url_redirection_graph.png)
 
 for 10 users, 120s
