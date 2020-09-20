@@ -2,7 +2,7 @@
 
 <img style="float: right;" width="600" src="./assets/goRubu.png"> 
 
-This repo contains implementation of a Url Shortner written in [Go](https://golang.org/).
+This repo contains implementation of a **Url Shortner** written in [Go](https://golang.org/).
 
 [![Build Status](https://travis-ci.com/rv404674/goRubu.svg?branch=master)](https://travis-ci.org/rv404674/goRubu)
 [![Coverage Status](https://coveralls.io/repos/github/rv404674/goRubu/badge.svg?branch=master)](https://coveralls.io/github/rv404674/goRubu?branch=master)
@@ -10,43 +10,52 @@ This repo contains implementation of a Url Shortner written in [Go](https://gola
 
 ## Contents
 
-- What is goRubu
-- Monitoring
-- Why goRubu
-- Running Server
-    - Docker
-    - Local
-- Api's
-- Contributing
-- Maintainer
-- License
+- [What is goRubu?](#What-is-goRubu?-:rocket:)
+- [Why goRubu?](#Why-goRubu?-:dog:)
+- [BenchMarking](#Benchmarking)
+- [Running Server](#Running-Server-:gear:)
+    - [Docker](#Docker)
+    - [Local](#Local)
+- [Api's](#Api's-:computer:)
+- [Monitoring](#Monitoring-:microscope:)
+- [Contributing](#Contributing-:beers:)
+- [Future Todo](#Future-Todo)
+- [Maintainer](#Maintainer-:sunglasses:)
+- [License](#License-:scroll:)
 
 ## What is goRubu? :rocket:
 
-1. A Url Shortner written in **Go**, with Mongo based backend.
+1. A Url Shortner written in **Go**, with **Mongo based** backend.
 2. Supports Caching for Hot urls, with Memcached, using a LRU based eviction
-strategy, and **write through type** of caching mechanism. Saw **[200%](commands_benchmarks.md)** decrease in Read Latency for URL redirection, after caching.
+strategy, and **write through type** of caching mechanism. Saw **[200%](/benchmarking/benchmarking.md)** decrease in Read Latency for URL redirection, after caching.
 3. Used Travis CI for adding a **CI/CD** pipeline.
-4. Dockerized the whole application. Used **Docker compose** for tying up different containers and **multi-stage build** for reducing the size of docker image by **[900%](commands_benchmarks.md)**. 
+4. Dockerized the whole application. Used **Docker compose** for tying up different containers and **multi-stage build** for reducing the size of docker image by **[900%](/benchmarking/benchmarking.md)**.
 4. **Prometheus and Grafana based monitoring**, to get an overall picture of the
 system and application metrics.
 5. Contains Api Validation and Logging Middlewares, along with Swagger based documentation
 
-## Monitoring:
+## Why goRubu? :dog:
 
-<img style="float: left;" width="600" src="./assets/application_metrics.png"> 
-<p align="left"> Grafana on Top of Prometheus </p>
+Wanted to Learn Go and system design, by building a project. Hence goRubu.
 
-<img style="float: left;" width="600" src="./assets/prometheus_targets.png"> 
-<p align="left"> Prometheus </p>
+## BenchMarking
+> NOTE - Url Shortner is a ready heavy system (read:write = 100:1), and these load tests are done on a single Machine. Check [this](/benchmarking/benchmarking.md) out for more info.
 
-## Why goRubu? :dog:	
+1. For **Url Redirection**, for 1000 Concurrent Users for 2 minutes -
+```bash
+http_req_duration..........: avg=2.39s    min=0s     med=2.27s max=7.51s    p(90)=3.65s p(95)=4.16s
+http_reqs..................: 49587   413.224692/s
+```
 
-Wanted to Learn Go and system design by building a project. Hence goRubu.
+2. For **Url Shortening**, for same specs
+```
+http_req_duration..........: avg=8.6s     min=0s      med=8.6s  max=19.03s   p(90)=10.33s p(95)=10.69s
+http_reqs..................: 13345   111.207074/s
+```
 
 ## Running Server :gear:
 
-### DOCKER
+### Docker
 
 1. You need to have [docker](https://www.docker.com/) and **docker-compose** installed. After that just to
 ```bash
@@ -57,7 +66,7 @@ make docker
 
 Check the Api's Section afterwards.
 
-### LOCAL
+### Local
 
 ### Prerequisites ✅
 
@@ -121,9 +130,10 @@ make execute
 ```
 > **Note**: To see what these commands do check out this [makefile](Makefile)
 
-## API :computer:
 
-1. Hit **http://localhost:8080/all/shorten_url** with any url as key.
+## Api's :computer:
+
+1. Hit **localhost:8080/all/shorten_url** with any url as key.
 ```json
 {
 	"Url": "https://www.redditgifts.com/exchanges/manage"
@@ -139,19 +149,33 @@ The endpoint will return a shortened URL.
 }
 ```
 
-3. Hit **http://localhost:9090/targets** (its where prometheus server will be running).
-If everything is working fine, The UI should look something like this
-<img style="float: right;" width="500" src="./assets/prometheus_targets.png"> 
+## Monitoring :microscope:
 
-# Contributing :beers:
+> Working:
+1. Prometheus follows a Pull based Mechanism instead of Push Based.
+2. goRubu exposes an HTTP endpoint exposing monitoring metrics.
+3. Prometheus then periodically download the metrics. For UI, prometheus is used as a data source for Grafana.
+
+<img style="float: left;" width="600" src="./assets/application_metrics.png"> 
+<p align="left"> Grafana on Top of Prometheus </p>
+
+## Contributing :beers:
 
 Peformance Improvements, bug fixes, better design approaches are welcome. Please Discuss your change by raising an issue, beforehand.
+
+## Future Todo
+
+1. Use Promtheus and Grafana as Docker Containers instead of Local Installation.
+2. Use Kubernetes instead of Docker Compose.
+3. Increase Coverage to more than 90%.
+4. Add Monitoring in Prometheus for Number of 2xx, 3xx and 4xx.
+
 
 # Maintainer :sunglasses:
 
 [Rahul Verma Linkedin](https://www.linkedin.com/in/rahul-verma-8aa59b116/)
 [Email](rv404674@gmail.com)
 
-## License
+## License :scroll:
 
 [MIT](LICENSE) © Rahul Verma
