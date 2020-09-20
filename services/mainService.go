@@ -11,6 +11,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/bradfitz/gomemcache/memcache"
@@ -24,6 +25,7 @@ var err error
 
 // EXPIRY_TIME - TTL for an item int cache
 var EXPIRY_TIME int
+var mutex sync.Mutex
 
 func init() {
 	dir, _ := os.Getwd()
@@ -42,8 +44,11 @@ func init() {
 
 // CreateShortenedUrl - This service shortens a give url.
 func CreateShortenedUrl(inputUrl string) string {
-
+	mutex.Lock()
 	counterVal := dao.GetCounterValue()
+	dao.UpdateCounter()
+	mutex.Unlock()
+
 	newUrl := GenerateShortenedUrl(counterVal)
 	inputModel := model.UrlModel{UniqueId: counterVal, Url: inputUrl, CreatedAt: time.Now()}
 
@@ -58,16 +63,7 @@ func CreateShortenedUrl(inputUrl string) string {
 		log.Printf("Error in setting memcached value:%v", err)
 	}
 
-	// FIXME:
-	// Race Condition - Undesirable condition where o/p of a program depends on the seq of execution of go routines
-
-	// To prevent this use Mutex - a locking mechanism, to ensure only one Go routine
-	// is running in the CS at any point of time
-
-	// TODO handle Race Conditions. Also use transaction to enable consistency.
-	// You could have mutexes as well, but mutex would have guaranteed consistency.
 	dao.InsertInShortenedUrl(inputModel)
-	dao.UpdateCounter()
 	return newUrl
 }
 
@@ -81,7 +77,7 @@ func UrlRedirection(inputUrl string) string {
 		log.Println("Shortened url found in cache", string(url.Value))
 		return string(url.Value)
 	} else if err != memcache.ErrCacheMiss {
-		log.Fatal("Memcached error ", err)
+		log.Println("Memcached error ", err)
 	}
 
 	// if its a cache miss, fetch the value from db and update the cache.

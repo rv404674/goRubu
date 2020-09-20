@@ -80,7 +80,7 @@ func InsertInShortenedUrl(urlModel model.UrlModel) {
 	insertResult, err := collection.InsertOne(context.Background(), urlModel)
 
 	if err != nil {
-		log.Fatal("Error while writing to shortened_url collection", err)
+		log.Fatal("Error while writing to shortened_url collection ", err)
 	}
 
 	log.Println("InsertedId", insertResult.InsertedID)
