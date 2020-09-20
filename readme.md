@@ -12,18 +12,18 @@ This repo contains implementation of a **Url Shortner** written in [Go](https://
 
 ## Contents
 
-- [What is goRubu?](#What-is-goRubu?-:rocket:)
-- [Why goRubu?](#Why-goRubu?-:dog:)
-- [BenchMarking](#Benchmarking)
-- [Running Server](#Running-Server-:gear:)
-    - [Docker](#Docker)
-    - [Local](#Local)
-- [Api's](#Api's-:computer:)
-- [Monitoring](#Monitoring-:microscope:)
-- [Contributing](#Contributing-:beers:)
-- [Future Todo](#Future-Todo)
-- [Maintainer](#Maintainer-:sunglasses:)
-- [License](#License-:scroll:)
+- [What is goRubu?](#what-is-gorubu-rocket)
+- [Why goRubu?](#why-gorubu-dog)
+- [BenchMarking](#benchmarking)
+- [Running Server](#running-rerver-gear)
+    - [Docker](#docker)
+    - [Local](#local)
+- [Api's](#apis-computer)
+- [Monitoring](#monitoring-microscope)
+- [Contributing](#contributing-beers)
+- [Future Todo](#future-todo-notebook)
+- [Maintainer](#maintainer-sunglasses)
+- [License](#license-scroll)
 
 ## What is goRubu? :rocket:
 
@@ -41,7 +41,7 @@ system and application metrics.
 Wanted to Learn Go and system design, by building a project. Hence goRubu.
 
 ## BenchMarking
-> NOTE - Url Shortner is a ready heavy system (read:write = 100:1), and these load tests are done on a single Machine. Check [this](/benchmarking/benchmarking.md) out for more info.
+> NOTE - Url Shortner is a read heavy system (read:write = 100:1), and these load tests are done on a single Machine. Check [this](/benchmarking/benchmarking.md) out for more info.
 
 1. For **Url Redirection**, for 1000 Concurrent Users for 2 minutes -
 ```bash
@@ -59,7 +59,7 @@ http_reqs..................: 13345   111.207074/s
 
 ### Docker
 
-1. You need to have [docker](https://www.docker.com/) and **docker-compose** installed. After that just to
+1. You need to have [docker](https://www.docker.com/) and **docker-compose** installed. After that just do
 ```bash
 make docker
 ```
@@ -165,7 +165,7 @@ The endpoint will return a shortened URL.
 
 Peformance Improvements, bug fixes, better design approaches are welcome. Please Discuss your change by raising an issue, beforehand.
 
-## Future Todo
+## Future Todo :notebook:
 
 1. Use Promtheus and Grafana as Docker Containers instead of Local Installation.
 2. Use Kubernetes instead of Docker Compose.
