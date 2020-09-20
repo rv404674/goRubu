@@ -45,7 +45,7 @@ Wanted to Learn Go and system design, by building a project. Hence goRubu.
 
 Check [this](/benchmarking/benchmarking.md) out for more info.
 
-1. For **Url Redirection**, with **1000 Concurrent Users**, bombarding the app server for **2mins** -
+1. For **Url Redirection**, with **1000 Concurrent Users**, bombarding the app server for **2mins**:
 ```bash
 http_req_duration..........: avg=2.39s    min=0s     med=2.27s max=7.51s    p(90)=3.65s p(95)=4.16s
 http_reqs..................: 49587   413.224692/s
