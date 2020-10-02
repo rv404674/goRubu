@@ -34,7 +34,8 @@ strategy, and **write through type** of caching mechanism. Saw **[200%](/benchma
 4. Dockerized the whole application. Used **Docker compose** for tying up different containers and **multi-stage build** for reducing the size of docker image by **[900%](/benchmarking/benchmarking.md)**.
 4. **Prometheus and Grafana based monitoring**, to get an overall picture of the
 system and application metrics.
-5. Contains Api Validation and Logging Middlewares, along with Swagger based documentation
+5. Handled **Concurrent Requests**, using a global Mutex, over Request Level. Use **Optimistic Concurrency Control** and **Pessimistic Concurrency Control**, to see if Performance can be increased.
+6. Contains Api Validation and Logging Middlewares, along with Swagger based documentation
 
 ## Why goRubu? :dog:
 
@@ -63,8 +64,11 @@ http_reqs..................: 13345   111.207074/s
 
 1. You need to have [docker](https://www.docker.com/) and **docker-compose** installed. After that just do
 ```bash
+git clone https://github.com/rv404674/goRubu.git
+cd goRubu
 make docker
 ```
+
 > Note - I haven't dockerized prometheus and grafana with it. Containerized goRubu and locally installed
 > prometheus and grafana will work fine as prometheus is only listening to "local:8080/metrics".
 
