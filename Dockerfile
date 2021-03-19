@@ -37,6 +37,7 @@ WORKDIR /root/
 # "COPY --from=builder /app/main/ ." No need to do this as we are copy whole app including the executables.
 # we need the whole app as well, because apart from executable our environment variables are stored in a
 # .env file.
+# copy whole /app/ to current dir.
 COPY --from=builder /app/ .
 
 # Expose port 8080 to the outside world
