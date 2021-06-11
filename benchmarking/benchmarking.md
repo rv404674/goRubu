@@ -1,37 +1,56 @@
 # Benchmarks
 NOTE: These load tests are done on a single machine having 8GB Ram, a Dual-Core Intel Core i5 Processor.
 
-## Concurrency Control
-
-Using a global mutex, on request level.
-```bash
-mutex.lock()
-CS
-mutex.unlock()
-```
-
 ### Url Redirection (Load Tested Using Docker Containers)
 [Graph - Url Redirection (no of Concurrent Users vs Response Time)](url_redirection_graph.png)
 
+ k6 run --summary-trend-stats "min,avg,max,p(95),p(99),p(99.99)" -d 120s -u 200 ./load_test_url_redirection.js
+
+100users, 120s
+http_req_duration..........: min=2.75ms avg=190.44ms max=950.19ms p(95)=388.29ms p(99)=523.61ms p(99.99)=872.22ms
+
+http_reqs..................: 62701   522.507805/s
+
+200users, 120s
+http_req_duration..........: min=2.23ms avg=372.33ms max=1.73s    p(95)=701.94ms p(99)=986.86ms p(99.99)=1.48s
+
+http_reqs..................: 64160   534.666138/s
+
+300users, 120s
+ http_req_duration..........: min=2.58ms avg=561.86ms max=2.21s    p(95)=1.02s p(99)=1.41s   p(99.99)=2.1s
+http_reqs..................: 63741   531.172736/s
+
+400users, 120s
+http_req_duration..........: min=4.15ms avg=795.82ms max=2.75s    p(95)=1.42s p(99)=1.77s    p(99.99)=2.47s
+http_reqs..................: 59934   499.448018/s
+
+500users, 120s
+http_req_duration..........: min=3.52ms avg=1s      max=4.38s    p(95)=1.73s p(99)=2.56s    p(99.99)=4.29s
+http_reqs..................: 59490   495.748899/s
+
+600users, 120s
+
+
 for 10 users, 120s
 ```bash
-k6 run -d 120s -u 10 ./load_test_url_redirection.js
-http_req_duration..........: avg=21.98ms min=2.21ms med=17.89ms max=527.23ms p(90)=39.74ms p(95)=50.01ms
-http_reqs..................: 53675   447.291485/s
+k6 run --summary-trend-stats "min,avg,max,p(95),p(99),p(99.99)" -d 120s -u 1000 ./load_test_url_redirection.js
+
+http_req_duration..........: min=5.22ms avg=2.26s    max=11.75s   p(95)=4.62s p(99)=6.79s    p(99.99)=11.67s
+http_reqs..................: 55678   434.924911/s
 ```
 
 for 100 users, 120s
 ```bash
-k6 run -d 120s -u 100 ./load_test_url_redirection.js
-http_req_duration..........: avg=161.85ms min=2.81ms med=149.48ms max=956.05ms p(90)=284.61ms p(95)=331.39ms
-http_reqs..................: 73807   615.056893/s
+k6 run --summary-trend-stats "min,avg,max,p(95),p(99),p(99.99)" -d 120s -u 100 ./load_test_url_redirection.js
+
 ```
 
 for 1000 users, 120s
 ```bash
-k6 run -d 120s -u 1000 ./load_test_url_redirection.js
-http_req_duration..........: avg=2.39s    min=0s     med=2.27s max=7.51s    p(90)=3.65s p(95)=4.16s
-http_reqs..................: 49587   413.224692/s
+k6 run --summary-trend-stats "min,avg,max,p(95),p(99),p(99.99)" -d 120s -u 1000 ./load_test_url_redirection.js
+
+http_req_duration..........: min=5.22ms avg=2.26s    max=11.75s   p(95)=4.62s p(99)=6.79s    p(99.99)=11.67s
+http_reqs..................: 55678   434.924911/s
 ```
 
 ### Url Shortening (Load Tested using Docker Containers)
